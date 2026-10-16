@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STIKO // CUSTOM STICKER & AI MOCKUP LAB</title>
+  <!-- Google Fonts: Archivo Black, Space Grotesk, Space Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Canvas Confetti for Checkout -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Tailwind Configuration for Y2K / Graffiti Punk -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Archivo Black"', 'sans-serif'],
+            sans: ['"Space Grotesk"', 'sans-serif'],
+            mono: ['"Space Mono"', 'monospace'],
+          },
+          colors: {
+            punk: {
+              blue: '#0000FF',
+              red: '#FF003C',
+              yellow: '#FFCC00',
+              black: '#000000',
+              white: '#FFFFFF',
+              gray: '#F5F5F5',
+              darkgray: '#111111',
+              border: '#000000',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-punk-white text-punk-black font-sans antialiased min-h-screen flex flex-col selection:bg-punk-yellow selection:text-punk-black">
+
+  <!-- ========================================== -->
+  <!-- 1. TOP TICKER & SOCIAL BAR                 -->
+  <!-- ========================================== -->
+  <div class="bg-punk-black text-punk-yellow border-b-2 border-punk-black font-mono text-xs uppercase font-bold py-1.5 px-4 tracking-wider flex items-center justify-between overflow-hidden">
+    <div class="ticker-wrap flex-1 mr-4">
+      <div class="ticker-content space-x-6">
+        <span>[STIKO UNDERGROUND LAB]</span>
+        <span>///</span>
+        <span>AI SMART CROP + 300 DPI UPSCALE</span>
+        <span>///</span>
+        <span>PROMO CODE: "STIKOAI" GET 15% OFF</span>
+        <span>///</span>
+        <span>WATERPROOF VINYL + DIE-CUT PRECISION</span>
+        <span>///</span>
+        <span>TEST ON LIVE MOCKUP BEFORE PRINT</span>
+        <span>///</span>
+        <span>[STIKO UNDERGROUND LAB]</span>
+        <span>///</span>
+        <span>PROMO CODE: "STIKOAI" GET 15% OFF</span>
+      </div>
+    </div>
+    <div class="hidden sm:flex items-center gap-4 text-punk-white shrink-0 text-xs font-mono">
+      <a href="https://instagram.com" target="_blank" rel="noreferrer" class="hover:text-punk-yellow transition-colors">[IG @stiko.id]</a>
+      <a href="https://tiktok.com" target="_blank" rel="noreferrer" class="hover:text-punk-yellow transition-colors">[TT @stiko_official]</a>
+      <a href="https://twitter.com" target="_blank" rel="noreferrer" class="hover:text-punk-yellow transition-colors">[X @stikoid]</a>
+      <a href="https://wa.me/6281234567890" target="_blank" rel="noreferrer" class="hover:text-punk-yellow text-punk-yellow transition-colors">[WA: 0812-3456-7890]</a>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 2. MAIN HEADER NAVIGATION (FULL WIDTH)     -->
+  <!-- ========================================== -->
+  <header class="bg-punk-white border-b-2 border-punk-black sticky top-0 z-40">
+    <div class="w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      
+      <!-- Brand Logo on Far Left -->
+      <a href="#home" onclick="navigateTo('home'); return false;" class="flex items-center gap-3 shrink-0">
+        <img src="logo.png" alt="STIKO" class="h-9 sm:h-11 object-contain">
+        <span class="bg-punk-black text-punk-white font-mono text-[10px] font-bold px-2 py-0.5 uppercase tracking-widest border border-punk-black hidden sm:inline-block">
+          AI LAB
+        </span>
+      </a>
+
+      <!-- Group Navigation, Cart & Profile on Far Right -->
+      <div class="flex items-center gap-2 sm:gap-4">
+        
+        <!-- Desktop Nav Links -->
+        <nav class="hidden md:flex items-center gap-1 font-mono text-xs uppercase font-bold mr-2">
+          <button onclick="navigateTo('home')" id="nav-btn-home" class="nav-btn px-3 py-1.5 border-2 border-transparent hover:border-punk-black text-punk-black transition-colors">
+            01. Home
+          </button>
+          <button onclick="navigateTo('products')" id="nav-btn-products" class="nav-btn px-3 py-1.5 border-2 border-transparent hover:border-punk-black text-punk-black transition-colors">
+            02. Catalog
+          </button>
+          <button onclick="navigateTo('studio')" id="nav-btn-studio" class="nav-btn px-3 py-1.5 border-2 border-punk-black bg-punk-blue text-punk-white hover:bg-punk-black transition-colors">
+            03. AI Custom Studio
+          </button>
+          <button onclick="navigateTo('about')" id="nav-btn-about" class="nav-btn px-3 py-1.5 border-2 border-transparent hover:border-punk-black text-punk-black transition-colors">
+            04. Manifesto
+          </button>
+        </nav>
+
+        <!-- Cart Action with Cart Icon -->
+        <button onclick="navigateTo('cart')" class="punk-btn px-3.5 py-1.5 font-mono text-xs font-bold flex items-center gap-2" title="Cart">
+          <i class="fa-solid fa-cart-shopping text-xs"></i>
+          <span>CART</span>
+          <span id="header-cart-count" class="bg-punk-white text-punk-blue px-1.5 py-0.2 text-[11px] font-black">
+            2
+          </span>
+        </button>
+
+        <!-- Profile Action -->
+        <button onclick="openAuthModal()" id="header-auth-btn" class="punk-btn-secondary px-3.5 py-1.5 font-mono text-xs font-bold flex items-center gap-1.5">
+          <i class="fa-solid fa-user text-[11px]"></i>
+          <span id="user-display-name">LOGIN</span>
+        </button>
+
+        <!-- Mobile Menu Trigger -->
+        <button onclick="toggleMobileMenu()" class="md:hidden punk-btn px-2.5 py-1.5 font-mono text-xs">
+          <i class="fa-solid fa-bars" id="mobile-menu-icon"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-menu" class="hidden md:hidden border-t-2 border-punk-black bg-punk-white p-4 font-mono text-xs font-bold space-y-2 uppercase">
+      <button onclick="navigateTo('home'); toggleMobileMenu()" class="block w-full text-left p-2 border-2 border-punk-black hover:bg-punk-gray">01. Home</button>
+      <button onclick="navigateTo('products'); toggleMobileMenu()" class="block w-full text-left p-2 border-2 border-punk-black hover:bg-punk-gray">02. Catalog</button>
+      <button onclick="navigateTo('studio'); toggleMobileMenu()" class="block w-full text-left p-2 border-2 border-punk-black bg-punk-blue text-punk-white">03. AI Custom Studio</button>
+      <button onclick="navigateTo('about'); toggleMobileMenu()" class="block w-full text-left p-2 border-2 border-punk-black hover:bg-punk-gray">04. Manifesto</button>
+      <button onclick="navigateTo('cart'); toggleMobileMenu()" class="block w-full text-left p-2 border-2 border-punk-black bg-punk-black text-punk-white">
+        <i class="fa-solid fa-cart-shopping mr-2"></i> Cart (<span id="mobile-cart-count">2</span>)
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 3. PAGE ROUTER CONTENT                     -->
+  <!-- ========================================== -->
+  <main class="flex-grow">
+
+    <!-- ========================================== -->
+    <!-- VIEW A: HOMEPAGE                           -->
+    <!-- ========================================== -->
+    <section id="page-home" class="page-view">
+      
+      <!-- Hero Banner -->
+      <div class="border-b-2 border-punk-black bg-punk-white py-12 md:py-16">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          <div class="lg:col-span-7 space-y-6">
+            <div class="inline-block bg-punk-black text-punk-yellow font-mono text-xs font-bold px-3 py-1 uppercase tracking-widest border border-punk-black">
+              // STREET CULTURE // PUNK DIY // AI ENGINE
+            </div>
+
+            <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl text-punk-black uppercase leading-[1.05] tracking-tight">
+              CUSTOM STICKERS. <br>
+              <span class="bg-punk-blue text-punk-white px-2 py-0.5">ZERO BULLSHIT.</span> <br>
+              POWERED BY AI.
+            </h1>
+
+            <p class="font-mono text-sm sm:text-base text-punk-black leading-relaxed max-w-xl">
+              Cetak stiker die-cut tahan banting. Upload desainmu, biarkan neural network kami potong background secara otomatis & upscale ke 300 DPI. Coba tempel & geser di laptop, tumbler, atau HP sebelum checkout.
+            </p>
+
+            <div class="flex flex-wrap gap-3 pt-2">
+              <button onclick="navigateTo('studio')" class="punk-btn font-display text-sm uppercase px-6 py-3.5 flex items-center gap-2">
+                <span>BUAT STIKER CUSTOM SEKARANG</span>
+                <span>&rarr;</span>
+              </button>
+              <button onclick="navigateTo('products')" class="punk-btn-secondary font-display text-sm uppercase px-6 py-3.5">
+                LIHAT KATALOG TEMPLATE
+              </button>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 pt-6 border-t-2 border-punk-black font-mono text-xs">
+              <div class="border-2 border-punk-black p-2 bg-punk-gray">
+                <span class="block font-bold text-punk-blue">[100% WATERPROOF]</span>
+                <span class="text-[11px] text-punk-black">Heavy vinyl & UV layer</span>
+              </div>
+              <div class="border-2 border-punk-black p-2 bg-punk-gray">
+                <span class="block font-bold text-punk-red">[DIE-CUT PRECISION]</span>
+                <span class="text-[11px] text-punk-black">Laser contour 0.1mm</span>
+              </div>
+              <div class="border-2 border-punk-black p-2 bg-punk-gray">
+                <span class="block font-bold text-punk-black">[FAST PRINT]</span>
+                <span class="text-[11px] text-punk-black">1-2 days production</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Graphic / Mockup Showcase -->
+          <div class="lg:col-span-5 border-2 border-punk-black bg-punk-black p-6 text-punk-white">
+            <div class="border-2 border-punk-white/30 p-4 relative min-h-[320px] flex flex-col justify-between">
+              
+              <div class="flex justify-between items-center font-mono text-[11px] text-punk-yellow border-b border-punk-white/20 pb-2">
+                <span>STIKO_MOCKUP_LAB_v2.0</span>
+                <span>STATUS: READY</span>
+              </div>
+
+              <!-- Graphic display center -->
+              <div class="my-6 relative flex items-center justify-center">
+                <div class="w-full max-w-xs h-44 bg-punk-darkgray border-2 border-punk-white/40 flex items-center justify-center relative p-2 overflow-hidden">
+                  <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=700&auto=format&fit=crop&q=80" alt="Laptop Mockup" class="absolute inset-0 w-full h-full object-cover opacity-60">
+                  <div class="p-1.5 bg-punk-white border-2 border-punk-black -rotate-6 z-10">
+                    <img src="logo.png" alt="Stiko Sticker Sample" class="w-28 object-contain">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bottom CTA -->
+              <div class="pt-3 border-t border-punk-white/20 flex items-center justify-between font-mono text-xs">
+                <span class="text-punk-white">MOCKUP REALTIME INTERAKTIF</span>
+                <button onclick="navigateTo('studio')" class="punk-btn px-3 py-1 font-bold text-xs">
+                  TEST DRIVE &rarr;
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Value Proposition Grid (Flat borders, no shadow) -->
+      <div class="border-b-2 border-punk-black bg-punk-gray py-12">
+        <div class="max-w-7xl mx-auto px-4">
+          <div class="mb-8">
+            <span class="bg-punk-black text-punk-white font-mono text-xs px-2 py-0.5 font-bold uppercase">CORE SPECS</span>
+            <h2 class="font-display text-3xl uppercase text-punk-black mt-2">TEKNOLOGI STIKO</h2>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            <div class="border-2 border-punk-black bg-punk-white p-5">
+              <div class="bg-punk-black text-punk-white font-mono text-xs font-bold inline-block px-2 py-0.5 mb-3">
+                01 // AI CROP
+              </div>
+              <h3 class="font-display text-xl uppercase text-punk-black mb-2">SMART CONTOUR CROP</h3>
+              <p class="font-mono text-xs text-punk-black leading-relaxed">
+                Upload gambar mentah apapun. AI langsung memisahkan background dan membuat garis potong die-cut putih presisi tanpa perlu edit manual.
+              </p>
+            </div>
+
+            <div class="border-2 border-punk-black bg-punk-white p-5">
+              <div class="bg-punk-black text-punk-white font-mono text-xs font-bold inline-block px-2 py-0.5 mb-3">
+                02 // RESOLUTION
+              </div>
+              <h3 class="font-display text-xl uppercase text-punk-black mb-2">300 DPI NEURAL UPSCALE</h3>
+              <p class="font-mono text-xs text-punk-black leading-relaxed">
+                Gambar pecah dari WhatsApp atau browser otomatis ditajamkan ke resolusi cetak industri 300 DPI. Garis tegas, warna pekat anti-buram.
+              </p>
+            </div>
+
+            <div class="border-2 border-punk-black bg-punk-white p-5">
+              <div class="bg-punk-black text-punk-white font-mono text-xs font-bold inline-block px-2 py-0.5 mb-3">
+                03 // MOCKUP
+              </div>
+              <h3 class="font-display text-xl uppercase text-punk-black mb-2">LIVE RESIZE & ROTATE</h3>
+              <p class="font-mono text-xs text-punk-black leading-relaxed">
+                Uji langsung tempel stiker di 4 media photo mockup: Laptop, Tumbler, Tablet, atau HP. Ubah ukuran di pojok stiker & putar langsung seperti di Figma.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Featured Catalog Strip (Flat borders, no shadow) -->
+      <div class="border-b-2 border-punk-black bg-punk-white py-12">
+        <div class="max-w-7xl mx-auto px-4">
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+            <div>
+              <span class="bg-punk-blue text-punk-white font-mono text-xs px-2 py-0.5 font-bold uppercase">DROP ARCHIVE</span>
+              <h2 class="font-display text-3xl uppercase text-punk-black mt-2">FEATURED TEMPLATES</h2>
+            </div>
+            <button onclick="navigateTo('products')" class="punk-btn-secondary px-4 py-2 font-mono text-xs font-bold uppercase">
+              SEMUA PRODUK &rarr;
+            </button>
+          </div>
+
+          <div id="home-featured-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Injected by app.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- How It Works -->
+      <div class="border-b-2 border-punk-black bg-punk-black text-punk-white py-12">
+        <div class="max-w-7xl mx-auto px-4">
+          <div class="mb-8">
+            <span class="bg-punk-yellow text-punk-black font-mono text-xs px-2 py-0.5 font-bold uppercase">ALUR KERJA</span>
+            <h2 class="font-display text-3xl uppercase text-punk-white mt-2">CARA ORDER 4 LANGKAH</h2>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-xs">
+            <div class="border-2 border-punk-white p-4 space-y-2">
+              <span class="text-punk-yellow text-base font-bold">[STEP 01]</span>
+              <h4 class="font-display text-sm uppercase text-punk-white">UPLOAD GAMBAR</h4>
+              <p class="text-punk-white/70">Upload file desain bebas atau pilih template dari katalog kami.</p>
+            </div>
+            <div class="border-2 border-punk-white p-4 space-y-2">
+              <span class="text-punk-yellow text-base font-bold">[STEP 02]</span>
+              <h4 class="font-display text-sm uppercase text-punk-white">AI AUTO-CROP</h4>
+              <p class="text-punk-white/70">Sistem memotong outline die-cut dan menaikkan ketajaman ke 300 DPI.</p>
+            </div>
+            <div class="border-2 border-punk-white p-4 space-y-2">
+              <span class="text-punk-yellow text-base font-bold">[STEP 03]</span>
+              <h4 class="font-display text-sm uppercase text-punk-white">MOCKUP TESTING</h4>
+              <p class="text-punk-white/70">Geser, perbesar dari pojok frame, dan putar stiker langsung di atas gadget.</p>
+            </div>
+            <div class="border-2 border-punk-white p-4 space-y-2">
+              <span class="text-punk-yellow text-base font-bold">[STEP 04]</span>
+              <h4 class="font-display text-sm uppercase text-punk-white">CETAK & KIRIM</h4>
+              <p class="text-punk-white/70">Checkout, bayar pakai QRIS/VA, stiker sampai dalam 1-2 hari kerja.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW B: PRODUCTS CATALOG                   -->
+    <!-- ========================================== -->
+    <section id="page-products" class="page-view hidden">
+      <div class="border-b-2 border-punk-black bg-punk-white py-8">
+        <div class="max-w-7xl mx-auto px-4 space-y-6">
+          <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+              <span class="bg-punk-black text-punk-white font-mono text-xs px-2 py-0.5 font-bold uppercase">CATALOG ARCHIVE</span>
+              <h1 class="font-display text-3xl sm:text-4xl uppercase text-punk-black mt-2">STICKER ARCHIVE</h1>
+            </div>
+
+            <!-- Search and Filter Bar -->
+            <div class="flex flex-wrap items-center gap-2">
+              <input type="text" id="product-search-input" onkeyup="filterProducts()" placeholder="SEARCH STICKER..." class="border-2 border-punk-black bg-punk-gray px-3 py-2 font-mono text-xs uppercase focus:bg-punk-white focus:outline-none w-56 sm:w-64">
+              <select id="product-sort-select" onchange="filterProducts()" class="border-2 border-punk-black bg-punk-gray px-3 py-2 font-mono text-xs uppercase focus:outline-none">
+                <option value="popular">POPULAR</option>
+                <option value="price-low">PRICE: LOW TO HIGH</option>
+                <option value="price-high">PRICE: HIGH TO LOW</option>
+                <option value="name">ALPHABETICAL</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Category Tags Bar -->
+          <div class="flex items-center gap-1.5 overflow-x-auto pb-1 font-mono text-xs uppercase" id="category-chips">
+            <button onclick="setCategoryFilter('all', this)" class="category-chip active punk-btn px-3 py-1.5 font-bold">ALL</button>
+            <button onclick="setCategoryFilter('holographic', this)" class="category-chip punk-btn-secondary px-3 py-1.5 font-bold">HOLOGRAPHIC</button>
+            <button onclick="setCategoryFilter('die-cut', this)" class="category-chip punk-btn-secondary px-3 py-1.5 font-bold">DIE-CUT VINYL</button>
+            <button onclick="setCategoryFilter('tech', this)" class="category-chip punk-btn-secondary px-3 py-1.5 font-bold">TECH & DEV</button>
+            <button onclick="setCategoryFilter('aesthetic', this)" class="category-chip punk-btn-secondary px-3 py-1.5 font-bold">STREETWEAR</button>
+            <button onclick="setCategoryFilter('anime', this)" class="category-chip punk-btn-secondary px-3 py-1.5 font-bold">PUNK & ANIME</button>
+            <button onclick="setCategoryFilter('glitter', this)" class="category-chip punk-btn-secondary px-3 py-1.5 font-bold">GLITTER UV</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Catalog Grid Container -->
+      <div class="max-w-7xl mx-auto px-4 py-8">
+        <div id="products-catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <!-- Injected via app.js -->
+        </div>
+
+        <div id="no-products-msg" class="hidden text-center py-16 font-mono">
+          <p class="font-display text-xl text-punk-black">[NO STICKERS MATCH YOUR FILTER]</p>
+          <p class="text-xs text-punk-black/70 mt-1">Coba kata kunci lain atau pilih kategori ALL.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW C: CUSTOM STICKER & AI STUDIO (CORE)  -->
+    <!-- ========================================== -->
+    <section id="page-studio" class="page-view hidden">
+      
+      <!-- Studio Header Bar -->
+      <div class="bg-punk-black text-punk-white border-b-2 border-punk-black py-4">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div>
+            <span class="bg-punk-blue text-punk-white font-mono text-[10px] font-bold px-2 py-0.5 uppercase tracking-widest">
+              AI ENGINE v2.4 // HARDWARE MOCKUP LAB
+            </span>
+            <h1 class="font-display text-2xl uppercase tracking-tight text-punk-white mt-1">
+              CUSTOM STICKER & LIVE MOCKUP
+            </h1>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="resetStudioCanvas()" class="punk-btn-secondary px-3 py-1.5 font-mono text-xs font-bold uppercase">
+              RESET POSISI
+            </button>
+            <button onclick="addCustomToCart()" class="punk-btn px-4 py-1.5 font-display text-xs uppercase flex items-center gap-1.5">
+              <i class="fa-solid fa-cart-plus"></i>
+              <span>+ ADD TO CART</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+          <!-- Left Column: Controls (5 Cols) -->
+          <div class="lg:col-span-5 space-y-4 font-mono text-xs">
+            
+            <!-- Step 1: Upload or Presets -->
+            <div class="border-2 border-punk-black bg-punk-white p-4">
+              <div class="flex justify-between items-center border-b-2 border-punk-black pb-2 mb-3">
+                <span class="font-display text-sm uppercase text-punk-black">[01] UPLOAD DESAIN</span>
+                <span class="text-[10px] text-punk-black">PNG/JPG/SVG/WEBP</span>
+              </div>
+
+              <!-- Upload Drag & Drop Box -->
+              <div id="drop-zone" onclick="document.getElementById('sticker-file-input').click()" class="border-2 border-dashed border-punk-black bg-punk-gray hover:bg-punk-yellow/20 p-6 text-center cursor-pointer transition-colors">
+                <input type="file" id="sticker-file-input" class="hidden" accept="image/*" onchange="handleFileUpload(event)">
+                <i class="fa-solid fa-upload text-xl mb-2 text-punk-blue"></i>
+                <p class="font-bold text-punk-black uppercase">KLIK ATAU DRAG FILE KE SINI</p>
+                <p class="text-[10px] text-punk-black/70 mt-1">Maksimal 10MB (Disarankan background transparan)</p>
+              </div>
+
+              <!-- Preset Selectors -->
+              <div class="mt-4 pt-3 border-t-2 border-punk-black">
+                <span class="font-bold text-[11px] uppercase block mb-2">Preset Desain Siap Uji:</span>
+                <div class="grid grid-cols-5 gap-1.5" id="preset-selector-container">
+                  <!-- Injected via JS -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2: AI Enhancements -->
+            <div class="border-2 border-punk-black bg-punk-white p-4 space-y-3">
+              <div class="flex justify-between items-center border-b-2 border-punk-black pb-2">
+                <span class="font-display text-sm uppercase text-punk-black">[02] AI PARAMETERS</span>
+                <span class="bg-punk-black text-punk-white text-[9px] font-bold px-1.5 py-0.5 uppercase">STIKO AI LAB</span>
+              </div>
+
+              <!-- AI Auto-Crop Switch -->
+              <div class="border-2 border-punk-black bg-punk-gray p-3 space-y-2">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="font-bold uppercase text-punk-black block">AI AUTO-CROP & OUTLINE</span>
+                    <span class="text-[10px] text-punk-black/70">Hapus background & bentuk kontur die-cut</span>
+                  </div>
+                  <input type="checkbox" id="ai-crop-toggle" class="punk-toggle" checked onchange="toggleAiCrop(this.checked)">
+                </div>
+
+                <div id="outline-controls" class="pt-2 border-t border-punk-black flex items-center justify-between text-[11px]">
+                  <span>TEBAL OUTLINE:</span>
+                  <div class="flex gap-1">
+                    <button onclick="setOutlineWidth(3, this)" class="outline-btn punk-btn-secondary px-2 py-0.5 text-punk-black font-bold">3MM</button>
+                    <button onclick="setOutlineWidth(6, this)" class="outline-btn active punk-btn px-2 py-0.5 text-punk-white font-bold">6MM</button>
+                    <button onclick="setOutlineWidth(10, this)" class="outline-btn punk-btn-secondary px-2 py-0.5 text-punk-black font-bold">10MM</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- AI Upscale Switch -->
+              <div class="border-2 border-punk-black bg-punk-gray p-3">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="font-bold uppercase text-punk-black block">300 DPI NEURAL UPSCALE</span>
+                    <span class="text-[10px] text-punk-black/70">Perbaiki ketajaman pixel anti-pecah</span>
+                  </div>
+                  <input type="checkbox" id="ai-upscale-toggle" class="punk-toggle" checked onchange="toggleAiUpscale(this.checked)">
+                </div>
+                <div id="upscale-indicator" class="mt-2 text-[10px] font-bold text-punk-blue">
+                  [STATUS AI: GAMBAR SIAP CETAK ULTRA-HD 300 DPI]
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3: Material & Size Specs -->
+            <div class="border-2 border-punk-black bg-punk-white p-4 space-y-3">
+              <div class="flex justify-between items-center border-b-2 border-punk-black pb-2">
+                <span class="font-display text-sm uppercase text-punk-black">[03] MATERIAL & SIZE</span>
+              </div>
+
+              <!-- Material Tiles -->
+              <div class="grid grid-cols-2 gap-2" id="material-selector">
+                <button type="button" class="material-card border-2 border-punk-blue bg-punk-gray p-2.5 text-left font-mono" onclick="selectMaterial('holographic', this)">
+                  <span class="block font-bold text-punk-black uppercase">[HOLOGRAPHIC]</span>
+                  <span class="text-[10px] text-punk-black/70 block">Pelangi iridescent</span>
+                  <span class="text-[10px] font-bold text-punk-blue mt-1 block">+RP 3.000/PC</span>
+                </button>
+
+                <button type="button" class="material-card border-2 border-punk-black bg-punk-white p-2.5 text-left font-mono" onclick="selectMaterial('vinyl-matte', this)">
+                  <span class="block font-bold text-punk-black uppercase">[VINYL MATTE]</span>
+                  <span class="text-[10px] text-punk-black/70 block">Doff anti silau</span>
+                  <span class="text-[10px] font-bold text-punk-black mt-1 block">STANDAR</span>
+                </button>
+
+                <button type="button" class="material-card border-2 border-punk-black bg-punk-white p-2.5 text-left font-mono" onclick="selectMaterial('glossy-uv', this)">
+                  <span class="block font-bold text-punk-black uppercase">[GLOSSY UV]</span>
+                  <span class="text-[10px] text-punk-black/70 block">Bening tahan gores</span>
+                  <span class="text-[10px] font-bold text-punk-black mt-1 block">+RP 1.000/PC</span>
+                </button>
+
+                <button type="button" class="material-card border-2 border-punk-black bg-punk-white p-2.5 text-left font-mono" onclick="selectMaterial('glitter', this)">
+                  <span class="block font-bold text-punk-black uppercase">[GLITTER UV]</span>
+                  <span class="text-[10px] text-punk-black/70 block">Partikel shimmer</span>
+                  <span class="text-[10px] font-bold text-punk-blue mt-1 block">+RP 3.500/PC</span>
+                </button>
+              </div>
+
+              <!-- Dimensions -->
+              <div class="pt-2 border-t border-punk-black">
+                <div class="flex justify-between items-center mb-1.5">
+                  <span class="font-bold uppercase text-[11px]">UKURAN CETAK:</span>
+                  <span id="dimension-label" class="bg-punk-black text-punk-yellow px-1.5 py-0.5 text-[10px] font-bold">7 × 7 CM (SEDANG)</span>
+                </div>
+                <div class="grid grid-cols-3 gap-1.5">
+                  <button onclick="setDimension('5x5', '5 × 5 CM (PAS UNTUK HP)', this)" class="dimension-btn punk-btn-secondary p-2 text-center text-[11px] font-bold">5 × 5 CM</button>
+                  <button onclick="setDimension('7x7', '7 × 7 CM (PAS UNTUK LAPTOP/TUMBLER)', this)" class="dimension-btn active punk-btn p-2 text-center text-[11px] font-bold">7 × 7 CM</button>
+                  <button onclick="setDimension('10x10', '10 × 10 CM (STATEMENT PIECE)', this)" class="dimension-btn punk-btn-secondary p-2 text-center text-[11px] font-bold">10 × 10 CM</button>
+                </div>
+              </div>
+
+              <!-- Quantity & Total -->
+              <div class="pt-3 border-t-2 border-punk-black flex items-center justify-between">
+                <div>
+                  <span class="font-bold uppercase block text-[11px]">JUMLAH (PCS):</span>
+                  <span class="text-[10px] text-punk-red font-bold">Diskon order &gt; 10 pcs</span>
+                </div>
+                <div class="flex items-center border-2 border-punk-black">
+                  <button onclick="updateStudioQty(-1)" class="w-7 h-7 bg-punk-gray hover:bg-punk-black hover:text-punk-white font-bold">-</button>
+                  <input type="number" id="studio-qty-input" value="5" min="1" max="500" onchange="calculateStudioPrice()" class="w-12 text-center text-xs font-bold bg-punk-white focus:outline-none">
+                  <button onclick="updateStudioQty(1)" class="w-7 h-7 bg-punk-gray hover:bg-punk-black hover:text-punk-white font-bold">+</button>
+                </div>
+              </div>
+
+              <!-- Price Box -->
+              <div class="border-2 border-punk-black bg-punk-black text-punk-white p-3.5 flex items-center justify-between">
+                <div>
+                  <span class="text-[10px] text-punk-yellow uppercase block font-mono">ESTIMASI TOTAL:</span>
+                  <span id="studio-total-price" class="font-display text-xl text-punk-yellow">RP 45.000</span>
+                  <span id="studio-unit-price" class="text-[10px] text-punk-white/70 block">Rp 9.000 / pc (Holographic)</span>
+                </div>
+                <button onclick="addCustomToCart()" class="punk-btn px-4 py-2 font-display text-xs uppercase flex items-center gap-1.5">
+                  <i class="fa-solid fa-cart-shopping"></i>
+                  <span>+ CART</span>
+                </button>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Right Column: Interactive Mockup Stage (7 Cols) -->
+          <div class="lg:col-span-7 space-y-4">
+            
+            <!-- Device Selector Bar + Color Variants -->
+            <div class="border-2 border-punk-black bg-punk-white p-3 flex flex-col sm:flex-row items-center justify-between gap-3 font-mono text-xs uppercase">
+              <div class="flex items-center gap-2">
+                <span class="font-bold">MEDIA GADGET:</span>
+                <div class="flex gap-1">
+                  <button onclick="switchMockupDevice('laptop', this)" class="device-tab active punk-btn px-3 py-1 font-bold">LAPTOP</button>
+                  <button onclick="switchMockupDevice('tumbler', this)" class="device-tab punk-btn-secondary px-3 py-1 font-bold">TUMBLER</button>
+                  <button onclick="switchMockupDevice('tablet', this)" class="device-tab punk-btn-secondary px-3 py-1 font-bold">TABLET</button>
+                  <button onclick="switchMockupDevice('phone', this)" class="device-tab punk-btn-secondary px-3 py-1 font-bold">PHONE</button>
+                </div>
+              </div>
+
+              <!-- Color Variant Switcher for Active Device -->
+              <div class="flex items-center gap-1.5" id="mockup-color-controls">
+                <span class="text-[11px] font-bold text-punk-black/70">WARNA:</span>
+                <div class="flex gap-1" id="device-color-buttons">
+                  <!-- Dynamically populated based on active device -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Canvas Stage Container -->
+            <div id="mockup-stage-container" class="border-2 border-punk-black bg-punk-black p-4 sm:p-6 relative overflow-hidden flex flex-col items-center justify-center min-h-[500px]">
+              
+              <!-- Top Left Control Info -->
+              <div class="absolute top-3 left-3 font-mono text-[10px] text-punk-yellow bg-punk-darkgray border border-punk-white/20 px-2 py-1 z-20">
+                [FIGMA TRANSFORM: DRAG TO MOVE // CORNER TO RESIZE // TOP PIN TO ROTATE]
+              </div>
+
+              <!-- DEVICE 1: LAPTOP MOCKUP PHOTO -->
+              <div id="device-laptop" class="device-mockup mockup-surface relative w-full max-w-[560px] h-[360px] flex items-center justify-center">
+                <img id="mockup-img-laptop" src="assets/laptop_space_gray.png" alt="Laptop Mockup" class="device-photo">
+
+                <!-- THE INTERACTIVE STICKER WITH FIGMA-STYLE TRANSFORM BOUNDING BOX -->
+                <div id="draggable-sticker" class="absolute z-30" style="top: 80px; left: 140px; transform: scale(1) rotate(-8deg);">
+                  <div class="transform-bounding-box" id="transform-box">
+                    
+                    <!-- Bounding Blue Frame -->
+                    <div class="transform-outline"></div>
+
+                    <!-- Rotate Handle at Top Center -->
+                    <div class="rotate-stem"></div>
+                    <div class="rotate-handle" id="handle-rotate" title="Drag to Rotate">
+                      <i class="fa-solid fa-rotate"></i>
+                    </div>
+
+                    <!-- 4 Corner Scale Handles -->
+                    <div class="scale-handle handle-tl" data-corner="tl" title="Drag to Resize"></div>
+                    <div class="scale-handle handle-tr" data-corner="tr" title="Drag to Resize"></div>
+                    <div class="scale-handle handle-bl" data-corner="bl" title="Drag to Resize"></div>
+                    <div class="scale-handle handle-br" data-corner="br" title="Drag to Resize"></div>
+
+                    <!-- Live Size & Rotation HUD Tooltip -->
+                    <div id="transform-hud">1.0x | -8°</div>
+
+                    <!-- Sticker Visual Element (Transparent - No White Box) -->
+                    <div id="sticker-visual-wrapper" class="relative diecut-contour holo-foil">
+                      <img id="current-sticker-img" src="logo.png" alt="Sticker Preview" class="w-32 h-auto object-contain pointer-events-none">
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+              <!-- DEVICE 2: TUMBLER MOCKUP PHOTO -->
+              <div id="device-tumbler" class="device-mockup mockup-surface hidden relative w-full max-w-[360px] h-[400px] flex items-center justify-center">
+                <img id="mockup-img-tumbler" src="assets/tumbler_ivory.png" alt="Tumbler Mockup" class="device-photo">
+                <div id="tumbler-body-canvas" class="absolute inset-0 flex items-center justify-center"></div>
+              </div>
+
+              <!-- DEVICE 3: TABLET MOCKUP PHOTO -->
+              <div id="device-tablet" class="device-mockup mockup-surface hidden relative w-full max-w-[500px] h-[360px] flex items-center justify-center">
+                <img id="mockup-img-tablet" src="assets/ipad_space_gray.png" alt="Tablet Mockup" class="device-photo">
+                <div id="tablet-body-canvas" class="absolute inset-0 flex items-center justify-center"></div>
+              </div>
+
+              <!-- DEVICE 4: SMARTPHONE MOCKUP PHOTO -->
+              <div id="device-phone" class="device-mockup mockup-surface hidden relative w-full max-w-[360px] h-[380px] flex items-center justify-center">
+                <img id="mockup-img-phone" src="assets/iphone_silver.png" alt="Phone Mockup" class="device-photo">
+                <div id="phone-body-canvas" class="absolute inset-0 flex items-center justify-center"></div>
+              </div>
+
+            </div>
+
+            <!-- Notice Callout -->
+            <div class="border-2 border-punk-black bg-punk-gray p-3 font-mono text-xs text-punk-black">
+              <span class="font-bold text-punk-blue">[KONTROL INTERAKTIF]:</span> Klik dan geser badan stiker untuk memindahkan posisi. Tarik <strong>kotak di pojok stiker</strong> untuk memperbesar/memperkecil, dan tarik <strong>lingkaran di atas</strong> untuk memutar sudut stiker!
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW D: CART PAGE (SEPARATE BEFORE PAYMENT)-->
+    <!-- ========================================== -->
+    <section id="page-cart" class="page-view hidden">
+      <div class="border-b-2 border-punk-black bg-punk-white py-6">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between">
+          <div>
+            <span class="bg-punk-black text-punk-yellow font-mono text-xs px-2 py-0.5 font-bold uppercase">CHECKOUT STAGE 1/2</span>
+            <h1 class="font-display text-3xl uppercase text-punk-black mt-1">KERANJANG BELANJA</h1>
+          </div>
+          <button onclick="navigateTo('products')" class="punk-btn-secondary px-3.5 py-1.5 font-mono text-xs font-bold uppercase">
+            &larr; TAMBAH STIKER LAIN
+          </button>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- Items List (8 Cols) - Flat border, no shadow -->
+          <div class="lg:col-span-8 space-y-4">
+            <div class="border-2 border-punk-black bg-punk-white">
+              <div class="p-3 bg-punk-black text-punk-white font-mono text-xs font-bold flex justify-between items-center uppercase">
+                <span class="flex items-center gap-2">
+                  <i class="fa-solid fa-cart-shopping"></i>
+                  <span>ITEM STIKER (<span id="cart-item-count-badge">2</span>)</span>
+                </span>
+                <button onclick="clearCart()" class="text-punk-yellow hover:underline">[KOSONGKAN CART]</button>
+              </div>
+
+              <!-- List Container -->
+              <div id="cart-items-list" class="divide-y-2 divide-punk-black">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+
+            <!-- Empty cart state -->
+            <div id="cart-empty-state" class="hidden border-2 border-punk-black bg-punk-white p-10 text-center font-mono">
+              <p class="font-display text-xl text-punk-black uppercase">[KERANJANG BELANJA KOSONG]</p>
+              <p class="text-xs text-punk-black/70 mt-2 mb-4">Tambahkan stiker dari katalog atau buat stiker custom sekarang.</p>
+              <button onclick="navigateTo('studio')" class="punk-btn px-5 py-2 font-display text-xs uppercase">
+                BUAT STIKER CUSTOM
+              </button>
+            </div>
+          </div>
+
+          <!-- Summary & Promo (4 Cols) - Flat border, no shadow -->
+          <div class="lg:col-span-4 border-2 border-punk-black bg-punk-white p-5 font-mono text-xs space-y-4">
+            <h3 class="font-display text-lg uppercase text-punk-black border-b-2 border-punk-black pb-2">
+              RINGKASAN BIAYA
+            </h3>
+
+            <!-- Promo Input -->
+            <div>
+              <span class="font-bold uppercase block mb-1.5">KODE PROMO / VOUCHER:</span>
+              <div class="flex gap-1.5">
+                <input type="text" id="cart-promo-input" placeholder="CODE: STIKOAI" class="flex-1 border-2 border-punk-black bg-punk-gray px-3 py-2 uppercase font-mono text-xs focus:bg-punk-white focus:outline-none">
+                <button onclick="applyPromoCode()" class="punk-btn px-3 py-2 font-bold uppercase">
+                  APPLY
+                </button>
+              </div>
+              <div id="promo-applied-badge" class="hidden mt-2 p-2 bg-punk-yellow border border-punk-black font-bold flex items-center justify-between text-[11px]">
+                <span>[PROMO STIKOAI: DISKON 15% AKTIF]</span>
+                <button onclick="removePromoCode()" class="text-punk-red font-bold">X</button>
+              </div>
+            </div>
+
+            <!-- Breakdown -->
+            <div class="space-y-2 border-t-2 border-punk-black pt-3">
+              <div class="flex justify-between">
+                <span>SUBTOTAL:</span>
+                <span id="cart-subtotal" class="font-bold">RP 65.000</span>
+              </div>
+              <div id="cart-discount-row" class="hidden flex justify-between text-punk-red font-bold">
+                <span>DISKON VOUCHER (15%):</span>
+                <span id="cart-discount">- RP 9.750</span>
+              </div>
+              <div class="flex justify-between text-punk-black/70">
+                <span>ONGKIR:</span>
+                <span>[DIHITUNG DI TAHAP 2]</span>
+              </div>
+              <div class="border-t-2 border-punk-black pt-3 flex justify-between items-baseline font-bold">
+                <span class="text-sm">TOTAL SEMENTARA:</span>
+                <span id="cart-final-total" class="font-display text-xl text-punk-blue">RP 65.000</span>
+              </div>
+            </div>
+
+            <!-- Trigger to Payment -->
+            <button onclick="navigateTo('payment')" id="btn-goto-payment" class="w-full punk-btn font-display text-sm uppercase py-3.5 block text-center">
+              LANJUT KE PEMBAYARAN &rarr;
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW E: PAYMENT / CHECKOUT PAGE (SEPARATE) -->
+    <!-- ========================================== -->
+    <section id="page-payment" class="page-view hidden">
+      <div class="border-b-2 border-punk-black bg-punk-white py-6">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between">
+          <div>
+            <span class="bg-punk-blue text-punk-white font-mono text-xs px-2 py-0.5 font-bold uppercase">CHECKOUT STAGE 2/2</span>
+            <h1 class="font-display text-3xl uppercase text-punk-black mt-1">DATA PENGIRIMAN & METODE BAYAR</h1>
+          </div>
+          <button onclick="navigateTo('cart')" class="punk-btn-secondary px-3.5 py-1.5 font-mono text-xs font-bold uppercase">
+            &larr; KEMBALI KE KERANJANG
+          </button>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- Shipping Form & Payment Selection (8 Cols) -->
+          <div class="lg:col-span-8 space-y-6 font-mono text-xs">
+            
+            <!-- Address Form -->
+            <div class="border-2 border-punk-black bg-punk-white p-5 space-y-4">
+              <h3 class="font-display text-base uppercase text-punk-black border-b-2 border-punk-black pb-2">
+                [01] ALAMAT PENERIMA
+              </h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block font-bold mb-1 uppercase">NAMA LENGKAP *</label>
+                  <input type="text" id="ship-name" value="Willys" class="w-full border-2 border-punk-black bg-punk-gray px-3 py-2 font-mono text-xs uppercase focus:bg-punk-white focus:outline-none">
+                </div>
+                <div>
+                  <label class="block font-bold mb-1 uppercase">NO. WHATSAPP / TELEPON *</label>
+                  <input type="tel" id="ship-phone" value="081234567890" class="w-full border-2 border-punk-black bg-punk-gray px-3 py-2 font-mono text-xs uppercase focus:bg-punk-white focus:outline-none">
+                </div>
+                <div class="sm:col-span-2">
+                  <label class="block font-bold mb-1 uppercase">ALAMAT LENGKAP *</label>
+                  <input type="text" id="ship-address" value="Jl. Boulevard Timur No. 42, Kelapa Gading" class="w-full border-2 border-punk-black bg-punk-gray px-3 py-2 font-mono text-xs uppercase focus:bg-punk-white focus:outline-none">
+                </div>
+                <div>
+                  <label class="block font-bold mb-1 uppercase">KOTA / KABUPATEN *</label>
+                  <input type="text" id="ship-city" value="Jakarta Utara" class="w-full border-2 border-punk-black bg-punk-gray px-3 py-2 font-mono text-xs uppercase focus:bg-punk-white focus:outline-none">
+                </div>
+                <div>
+                  <label class="block font-bold mb-1 uppercase">KODE POS *</label>
+                  <input type="text" id="ship-postal" value="14240" class="w-full border-2 border-punk-black bg-punk-gray px-3 py-2 font-mono text-xs uppercase focus:bg-punk-white focus:outline-none">
+                </div>
+              </div>
+            </div>
+
+            <!-- Courier Selection -->
+            <div class="border-2 border-punk-black bg-punk-white p-5 space-y-4">
+              <h3 class="font-display text-base uppercase text-punk-black border-b-2 border-punk-black pb-2">
+                [02] PILIH KURIR EKSPEDISI
+              </h3>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <button type="button" class="courier-card border-2 border-punk-blue bg-punk-gray p-3 text-left font-mono" onclick="selectCourier('sicepat', 12000, this)">
+                  <span class="block font-bold uppercase text-punk-black">SICEPAT REG</span>
+                  <span class="text-[10px] text-punk-black/70 block">Estimasi 1-2 hari</span>
+                  <span class="text-xs font-bold text-punk-blue mt-2 block">RP 12.000</span>
+                </button>
+                <button type="button" class="courier-card border-2 border-punk-black bg-punk-white p-3 text-left font-mono" onclick="selectCourier('jne', 14000, this)">
+                  <span class="block font-bold uppercase text-punk-black">JNE YES (KILAT)</span>
+                  <span class="text-[10px] text-punk-black/70 block">Besok sampai</span>
+                  <span class="text-xs font-bold text-punk-black mt-2 block">RP 14.000</span>
+                </button>
+                <button type="button" class="courier-card border-2 border-punk-black bg-punk-white p-3 text-left font-mono" onclick="selectCourier('gosend', 20000, this)">
+                  <span class="block font-bold uppercase text-punk-black">GOSEND INSTANT</span>
+                  <span class="text-[10px] text-punk-black/70 block">3-4 jam sampai</span>
+                  <span class="text-xs font-bold text-punk-black mt-2 block">RP 20.000</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Payment Methods -->
+            <div class="border-2 border-punk-black bg-punk-white p-5 space-y-4">
+              <h3 class="font-display text-base uppercase text-punk-black border-b-2 border-punk-black pb-2">
+                [03] METODE PEMBAYARAN RESMI
+              </h3>
+              <div class="space-y-3">
+                
+                <!-- QRIS -->
+                <div class="payment-method-card border-2 border-punk-blue bg-punk-gray p-4 cursor-pointer" onclick="selectPaymentMethod('qris', this)">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <span class="font-bold uppercase text-punk-black block">[QRIS INSTANT - SEMUA E-WALLET & M-BANKING]</span>
+                      <span class="text-[10px] text-punk-black/70">GoPay, OVO, ShopeePay, Dana, BCA Mobile (Verifikasi Otomatis)</span>
+                    </div>
+                    <span class="bg-punk-black text-punk-yellow px-2 py-0.5 font-bold text-[10px]">REKOMENDASI</span>
+                  </div>
+
+                  <div id="qris-preview-box" class="mt-4 p-3 bg-punk-white border-2 border-punk-black flex flex-col sm:flex-row items-center gap-4">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=STIKO-ORDER-98124" alt="QRIS CODE" class="w-28 h-28 border border-punk-black object-contain">
+                    <div class="text-[11px] space-y-1">
+                      <p class="font-bold uppercase">SCAN QR CODE DI ATAS UNTUK BAYAR</p>
+                      <p class="text-punk-black/70">Buka aplikasi m-banking atau e-wallet kamu, lalu scan QR untuk konfirmasi instan.</p>
+                      <p class="text-punk-red font-bold">BATAS WAKTU: 15:00 MENIT</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- VA -->
+                <div class="payment-method-card border-2 border-punk-black bg-punk-white p-4 cursor-pointer" onclick="selectPaymentMethod('va', this)">
+                  <span class="font-bold uppercase text-punk-black block">[VIRTUAL ACCOUNT BANK (BCA / MANDIRI / BNI / BRI)]</span>
+                  <span class="text-[10px] text-punk-black/70">Transfer lewat ATM atau Mobile Banking</span>
+                </div>
+
+                <!-- Credit Card -->
+                <div class="payment-method-card border-2 border-punk-black bg-punk-white p-4 cursor-pointer" onclick="selectPaymentMethod('cc', this)">
+                  <span class="font-bold uppercase text-punk-black block">[KARTU KREDIT / DEBIT ONLINE (VISA / MASTERCARD)]</span>
+                  <span class="text-[10px] text-punk-black/70">Pembayaran kartu online dengan 3D Secure</span>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Final Summary & Trigger (4 Cols) - Flat border, no shadow -->
+          <div class="lg:col-span-4 border-2 border-punk-black bg-punk-white p-5 font-mono text-xs space-y-4 sticky top-20">
+            <h3 class="font-display text-lg uppercase text-punk-black border-b-2 border-punk-black pb-2">
+              TOTAL TAGIHAN
+            </h3>
+
+            <!-- Mini item list -->
+            <div id="payment-items-summary" class="space-y-1.5 max-h-44 overflow-y-auto pr-1">
+              <!-- Injected via JS -->
+            </div>
+
+            <div class="space-y-2 border-t-2 border-punk-black pt-3">
+              <div class="flex justify-between">
+                <span>SUBTOTAL PRODUK:</span>
+                <span id="payment-subtotal" class="font-bold">RP 65.000</span>
+              </div>
+              <div id="payment-discount-row" class="hidden flex justify-between text-punk-red font-bold">
+                <span>DISKON VOUCHER:</span>
+                <span id="payment-discount">- RP 9.750</span>
+              </div>
+              <div class="flex justify-between">
+                <span>ONGKIR (<span id="payment-courier-name">SICEPAT REG</span>):</span>
+                <span id="payment-shipping-cost" class="font-bold">RP 12.000</span>
+              </div>
+              <div class="flex justify-between">
+                <span>BIAYA SISTEM & AI:</span>
+                <span class="font-bold text-punk-blue">RP 0 (GRATIS)</span>
+              </div>
+              <div class="border-t-2 border-punk-black pt-3 flex justify-between items-baseline font-bold">
+                <span class="text-sm">TOTAL FINAL:</span>
+                <span id="payment-grand-total" class="font-display text-2xl text-punk-blue">RP 77.000</span>
+              </div>
+            </div>
+
+            <!-- Pay Now Button -->
+            <button onclick="executePayment()" id="btn-pay-now" class="w-full punk-btn font-display text-sm uppercase py-4 block text-center">
+              BAYAR SEKARANG (RP 77.000)
+            </button>
+
+            <p class="text-[10px] text-punk-black/60 text-center uppercase">
+              // TRANSAKSI ENKRIPSI AMAN 256-BIT //
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW F: ABOUT US / MANIFESTO               -->
+    <!-- ========================================== -->
+    <section id="page-about" class="page-view hidden">
+      <div class="border-b-2 border-punk-black bg-punk-black text-punk-white py-16">
+        <div class="max-w-4xl mx-auto px-4 text-center space-y-4">
+          <span class="bg-punk-yellow text-punk-black font-mono text-xs px-2 py-0.5 font-bold uppercase">STIKO MANIFESTO</span>
+          <h1 class="font-display text-4xl sm:text-5xl uppercase tracking-tight text-punk-white">
+            WE MAKE STICKERS FOR REBELS, CREATORS & CODERS.
+          </h1>
+          <p class="font-mono text-xs sm:text-sm text-punk-white/70 max-w-xl mx-auto leading-relaxed">
+            Stiko menolak percetakan konvensional yang kaku. Kami menggabungkan estetika graffiti jalanan dengan mesin AI cutting untuk memberi kebebasan berekspresi tanpa batas.
+          </p>
+        </div>
+      </div>
+
+      <div class="max-w-4xl mx-auto px-4 py-12 space-y-8 font-mono text-xs">
+        <div class="border-2 border-punk-black bg-punk-white p-6 space-y-3">
+          <h3 class="font-display text-xl uppercase text-punk-black">KOMITMEN MATERIAL STIKO</h3>
+          <p class="leading-relaxed text-punk-black/80">
+            Semua stiker kami dicetak menggunakan mesin cetak Jepang Mimaki & tinta UV Curable tahan gores, tahan cuaca outdoor, dan tidak meninggalkan residu lem saat dicopot dari laptop atau helm motor Anda.
+          </p>
+          <ul class="list-disc list-inside space-y-1 font-bold pt-2">
+            <li>Tahan air 100% (Waterproof & Dishwasher safe)</li>
+            <li>Bahan Vinyl tebal 140 micron anti sobek</li>
+            <li>Hasil potong laser contour 0.1 mm presisi tinggi</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- 4. MODALS & OVERLAYS                       -->
+  <!-- ========================================== -->
+
+  <!-- AUTH MODAL (LOGIN & REGISTER WITH CONFIRM PASSWORD) -->
+  <div id="auth-modal" class="fixed inset-0 z-50 bg-punk-black/80 hidden items-center justify-center p-4">
+    <div class="border-2 border-punk-black bg-punk-white max-w-md w-full p-6 space-y-4 font-mono text-xs">
+      <div class="flex justify-between items-center border-b-2 border-punk-black pb-2">
+        <span class="font-display text-base uppercase text-punk-black">[STIKO AUTHENTICATION]</span>
+        <button onclick="closeAuthModal()" class="font-bold text-sm text-punk-black hover:text-punk-red">[X]</button>
+      </div>
+
+      <!-- Tab Switch -->
+      <div class="flex border-2 border-punk-black">
+        <button id="auth-tab-login" onclick="switchAuthTab('login')" class="flex-1 py-1.5 font-bold uppercase bg-punk-black text-punk-white">LOGIN</button>
+        <button id="auth-tab-register" onclick="switchAuthTab('register')" class="flex-1 py-1.5 font-bold uppercase bg-punk-gray text-punk-black">REGISTER</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="form-login" onsubmit="handleAuthSubmit(event, 'login')" class="space-y-3">
+        <div>
+          <label class="block font-bold uppercase mb-1">EMAIL / USERNAME</label>
+          <input type="text" id="login-email" value="willys@example.com" class="w-full border-2 border-punk-black bg-punk-gray px-3 py-2 font-mono text-xs focus:bg-punk-white focus:outline-none">
+        </div>
+        <div>
+          <label class="block font-bold uppercase mb-1">PASSWORD</label>
+          <input type="password" id="login-password" value="secret123" class="w-full border-2 border-punk-black bg-punk-gray px-3 py-2 font-mono text-xs focus:bg-punk-white focus:outline-none">
+        </div>
+        <button type="submit" class="w-full punk-btn font-display text-xs uppercase py-2.5">
+          MASUK SEKARANG
+        </button>
+      </form>
+
+      <!-- Register Form with Password and Confirm Password -->
+      <form id="form-register" onsubmit="handleAuthSubmit(event, 'register')" class="space-y-3 hidden">
+        <div>
+          <label class="block font-bold uppercase mb-1">NAMA LENGKAP</label>
+          <input type="text" id="reg-name" placeholder="Nama Anda" class="w-full border-2 border-punk-black bg-punk-gray px-3 py-2 font-mono text-xs focus:bg-punk-white focus:outline-none" required>
+        </div>
+        <div>
+          <label class="block font-bold uppercase mb-1">EMAIL</label>
+          <input type="email" id="reg-email" placeholder="nama@email.com" class="w-full border-2 border-punk-black bg-punk-gray px-3 py-2 font-mono text-xs focus:bg-punk-white focus:outline-none" required>
+        </div>
+        <div>
+          <label class="block font-bold uppercase mb-1">PASSWORD</label>
+          <input type="password" id="reg-password" placeholder="Minimal 8 karakter" class="w-full border-2 border-punk-black bg-punk-gray px-3 py-2 font-mono text-xs focus:bg-punk-white focus:outline-none" required>
+        </div>
+        <div>
+          <label class="block font-bold uppercase mb-1">KONFIRMASI PASSWORD</label>
+          <input type="password" id="reg-confirm-password" placeholder="Ulangi password di atas" class="w-full border-2 border-punk-black bg-punk-gray px-3 py-2 font-mono text-xs focus:bg-punk-white focus:outline-none" required>
+        </div>
+        <button type="submit" class="w-full punk-btn font-display text-xs uppercase py-2.5">
+          DAFTAR AKUN BARU
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- INVOICE SUCCESS MODAL -->
+  <div id="invoice-modal" class="fixed inset-0 z-50 bg-punk-black/80 hidden items-center justify-center p-4">
+    <div class="border-2 border-punk-black bg-punk-white max-w-lg w-full p-6 space-y-4 font-mono text-xs">
+      <div class="bg-punk-black text-punk-yellow p-3 text-center border-2 border-punk-black">
+        <h2 class="font-display text-xl uppercase">[PEMBAYARAN TERKONFIRMASI]</h2>
+        <p class="text-[11px] mt-1">PESANANMU MASUK ANTRIAN CETAK INDUSTRI!</p>
+      </div>
+
+      <div class="border-2 border-punk-black bg-punk-gray p-4 space-y-2">
+        <div class="flex justify-between">
+          <span class="text-punk-black/70">ORDER ID:</span>
+          <span id="invoice-order-id" class="font-bold text-punk-blue">#STK-984210</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-punk-black/70">PENERIMA:</span>
+          <span id="invoice-name" class="font-bold">Willys</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-punk-black/70">METODE:</span>
+          <span id="invoice-payment" class="font-bold">QRIS Instant</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-punk-black/70">EKSPEDISI:</span>
+          <span id="invoice-courier" class="font-bold">SiCepat REG</span>
+        </div>
+        <div class="border-t-2 border-punk-black pt-2 flex justify-between font-bold text-sm">
+          <span>TOTAL DIBAYAR:</span>
+          <span id="invoice-total" class="text-punk-blue font-display text-lg">RP 77.000</span>
+        </div>
+      </div>
+
+      <div class="flex gap-2">
+        <button onclick="closeInvoiceModalAndGoHome()" class="flex-1 punk-btn-secondary py-2.5 font-bold uppercase">
+          KEMBALI KE HOME
+        </button>
+        <button onclick="navigateTo('studio'); closeInvoiceModal()" class="flex-1 punk-btn py-2.5 font-bold uppercase">
+          BUAT STIKER LAGI
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK VIEW MODAL -->
+  <div id="quickview-modal" class="fixed inset-0 z-50 bg-punk-black/80 hidden items-center justify-center p-4">
+    <div class="border-2 border-punk-black bg-punk-white max-w-xl w-full p-6 space-y-4 font-mono text-xs">
+      <div class="flex justify-between items-center border-b-2 border-punk-black pb-2">
+        <span id="qv-category" class="bg-punk-black text-punk-yellow px-2 py-0.5 font-bold uppercase"></span>
+        <button onclick="closeQuickViewModal()" class="font-bold text-sm hover:text-punk-red">[X]</button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+        <div class="border-2 border-punk-black bg-punk-black p-4 flex items-center justify-center">
+          <img id="qv-img" src="" alt="Sticker" class="w-40 h-40 object-contain">
+        </div>
+        <div class="space-y-2">
+          <h3 id="qv-title" class="font-display text-lg uppercase text-punk-black"></h3>
+          <p id="qv-price" class="font-display text-xl text-punk-blue"></p>
+          <p id="qv-desc" class="text-punk-black/70 leading-relaxed"></p>
+
+          <div class="pt-3 space-y-2">
+            <button id="qv-btn-customize" class="w-full punk-btn py-2 font-display uppercase">
+              CUSTOM DI AI STUDIO
+            </button>
+            <button id="qv-btn-cart" class="w-full punk-btn-secondary py-2 font-bold uppercase">
+              + TAMBAH KE CART
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 5. FOOTER                                  -->
+  <!-- ========================================== -->
+  <footer class="bg-punk-black text-punk-white border-t-2 border-punk-black font-mono text-xs py-8 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <img src="logo.png" alt="STIKO" class="h-8 object-contain">
+        <span class="text-punk-white/60">// STREETWEAR CUSTOM STICKERS // AI PRODUCTION LAB</span>
+      </div>
+      <div class="flex items-center gap-4 text-punk-yellow uppercase font-bold">
+        <a href="https://instagram.com" class="hover:text-punk-white">[INSTAGRAM]</a>
+        <a href="https://tiktok.com" class="hover:text-punk-white">[TIKTOK]</a>
+        <a href="https://twitter.com" class="hover:text-punk-white">[TWITTER/X]</a>
+        <a href="https://wa.me/6281234567890" class="hover:text-punk-white">[WHATSAPP CS]</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

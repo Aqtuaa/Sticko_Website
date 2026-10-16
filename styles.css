@@ -1,0 +1,297 @@
+/* ===================================================
+   STIKO - GRAFFITI PUNK / Y2K PUNK DESIGN SYSTEM
+   Palette:
+   - Electric Blue: #0000FF
+   - Hot Red:       #FF003C
+   - Bright Yellow: #FFCC00
+   - Pure Black:    #000000
+   - Off-White:     #F4F4F4
+   =================================================== */
+
+:root {
+  --blue: #0000FF;
+  --red: #FF003C;
+  --yellow: #FFCC00;
+  --black: #000000;
+  --white: #FFFFFF;
+  --gray-bg: #F5F5F5;
+}
+
+/* Sharp Brutalist Reset */
+* {
+  border-radius: 0 !important;
+}
+
+/* Selection Color */
+::selection {
+  background: var(--yellow);
+  color: var(--black);
+}
+
+/* Flat, Uniform Button Styling */
+.punk-btn {
+  background-color: var(--blue);
+  color: #FFFFFF;
+  border: 2px solid #000000;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: background-color 0.1s ease, color 0.1s ease;
+  cursor: pointer;
+}
+
+.punk-btn:hover {
+  background-color: #000000;
+  color: #FFFFFF;
+}
+
+.punk-btn:active {
+  transform: translate(1px, 1px);
+}
+
+/* Secondary Button Variant */
+.punk-btn-secondary {
+  background-color: #FFFFFF;
+  color: #000000;
+  border: 2px solid #000000;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: background-color 0.1s ease, color 0.1s ease;
+  cursor: pointer;
+}
+
+.punk-btn-secondary:hover {
+  background-color: var(--gray-bg);
+  color: #000000;
+}
+
+/* Ticker Marquee Bar */
+.ticker-wrap {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ticker-content {
+  display: inline-block;
+  animation: marquee 22s linear infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ========================================== */
+/* FIGMA-STYLE STICKER TRANSFORM FRAME        */
+/* ========================================== */
+#draggable-sticker {
+  touch-action: none;
+  cursor: move;
+}
+
+.transform-bounding-box {
+  position: relative;
+  display: inline-block;
+}
+
+.transform-outline {
+  position: absolute;
+  inset: -6px;
+  border: 1.5px dashed var(--blue);
+  pointer-events: none;
+}
+
+/* Corner Scale Handles */
+.scale-handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #FFFFFF;
+  border: 2px solid var(--blue);
+  z-index: 50;
+}
+
+.scale-handle:hover {
+  background-color: var(--yellow);
+}
+
+.handle-tl { top: -11px; left: -11px; cursor: nwse-resize; }
+.handle-tr { top: -11px; right: -11px; cursor: nesw-resize; }
+.handle-bl { bottom: -11px; left: -11px; cursor: nesw-resize; }
+.handle-br { bottom: -11px; right: -11px; cursor: nwse-resize; }
+
+/* Rotate Handle at Top Center */
+.rotate-handle {
+  position: absolute;
+  top: -26px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 18px;
+  background-color: #FFFFFF;
+  border: 2px solid var(--blue);
+  color: var(--blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  cursor: alias;
+  z-index: 50;
+}
+
+.rotate-handle:hover {
+  background-color: var(--yellow);
+  color: #000000;
+}
+
+.rotate-stem {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 8px;
+  background-color: var(--blue);
+  pointer-events: none;
+}
+
+/* Live Transform HUD */
+#transform-hud {
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000000;
+  color: #FFFFFF;
+  font-family: monospace;
+  font-size: 10px;
+  padding: 2px 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 50;
+}
+
+#transform-hud.active {
+  opacity: 1;
+}
+
+/* ========================================== */
+/* STICKER DIE-CUT CONTOUR (NO WHITE BOX!)    */
+/* ========================================== */
+#sticker-visual-wrapper {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Contour outline hugs the exact transparent PNG artwork */
+.diecut-contour img {
+  filter: 
+    drop-shadow(2px 0 0 #FFFFFF) 
+    drop-shadow(-2px 0 0 #FFFFFF) 
+    drop-shadow(0 2px 0 #FFFFFF) 
+    drop-shadow(0 -2px 0 #FFFFFF)
+    drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.45));
+}
+
+.diecut-contour.diecut-thick img {
+  filter: 
+    drop-shadow(3.5px 0 0 #FFFFFF) 
+    drop-shadow(-3.5px 0 0 #FFFFFF) 
+    drop-shadow(0 3.5px 0 #FFFFFF) 
+    drop-shadow(0 -3.5px 0 #FFFFFF)
+    drop-shadow(3px 3px 0px rgba(0, 0, 0, 0.45));
+}
+
+.diecut-contour.diecut-thin img {
+  filter: 
+    drop-shadow(1.5px 0 0 #FFFFFF) 
+    drop-shadow(-1.5px 0 0 #FFFFFF) 
+    drop-shadow(0 1.5px 0 #FFFFFF) 
+    drop-shadow(0 -1.5px 0 #FFFFFF)
+    drop-shadow(1.5px 1.5px 0px rgba(0, 0, 0, 0.45));
+}
+
+/* Holographic Rainbow Foil Shimmer (Flat Y2K Style) */
+.holo-foil {
+  position: relative;
+  overflow: hidden;
+}
+
+.holo-foil::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    125deg,
+    transparent 20%,
+    rgba(255, 0, 60, 0.4) 35%,
+    rgba(0, 0, 255, 0.45) 50%,
+    rgba(255, 204, 0, 0.4) 65%,
+    transparent 80%
+  );
+  background-size: 200% 200%;
+  mix-blend-mode: color-dodge;
+  pointer-events-none;
+  opacity: 0.85;
+}
+
+/* Custom Checkbox Sharp Punk Toggle */
+.punk-toggle {
+  appearance: none;
+  width: 44px;
+  height: 24px;
+  background: #000000;
+  border: 2px solid #000000;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+}
+
+.punk-toggle::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: #FFFFFF;
+  transition: transform 0.1s ease;
+}
+
+.punk-toggle:checked {
+  background: var(--blue);
+}
+
+.punk-toggle:checked::before {
+  transform: translateX(20px);
+  background: var(--yellow);
+}
+
+/* Mockup Canvas Photo Surface Frame */
+.mockup-surface {
+  position: relative;
+  background-color: transparent;
+  overflow: hidden;
+}
+
+.mockup-surface img.device-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Quick utility for clean borders */
+.border-punk {
+  border: 2px solid #000000;
+}
+
+.border-b-punk {
+  border-bottom: 2px solid #000000;
+}
+
+.border-t-punk {
+  border-top: 2px solid #000000;
+}
