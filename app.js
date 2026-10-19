@@ -280,18 +280,19 @@ function navigateTo(pageId) {
 
   // Update nav buttons
   document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.classList.remove('bg-punk-black', 'text-punk-white', 'border-punk-black');
-    btn.classList.add('border-transparent', 'text-punk-black');
+    if (btn.id === 'nav-btn-studio') {
+      btn.className = 'nav-btn px-3 py-1.5 border-2 border-punk-black bg-punk-blue text-punk-white hover:bg-punk-black transition-colors';
+    } else {
+      btn.className = 'nav-btn px-3 py-1.5 border-2 border-transparent hover:border-punk-black text-punk-black transition-colors';
+    }
   });
 
   const activeBtn = document.getElementById(`nav-btn-${pageId}`);
   if (activeBtn) {
     if (pageId === 'studio') {
-      activeBtn.classList.remove('border-transparent');
-      activeBtn.classList.add('border-punk-black', 'bg-punk-blue', 'text-punk-white');
+      activeBtn.className = 'nav-btn px-3 py-1.5 border-2 border-punk-black bg-punk-blue text-punk-white active';
     } else {
-      activeBtn.classList.remove('border-transparent');
-      activeBtn.classList.add('bg-punk-black', 'text-punk-white', 'border-punk-black');
+      activeBtn.className = 'nav-btn px-3 py-1.5 border-2 border-punk-black bg-punk-black text-punk-white active';
     }
   }
 
@@ -875,12 +876,12 @@ function renderCartPage() {
   listContainer.innerHTML = state.cart.map(item => `
     <div class="p-4 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs">
       <div class="flex items-center gap-4 w-full sm:w-auto">
-        <div class="w-16 h-16 bg-punk-black border-2 border-punk-black p-1 flex items-center justify-center shrink-0">
+        <div class="w-16 h-16 bg-punk-gray border-2 border-punk-black p-1 flex items-center justify-center shrink-0">
           <img src="${item.img}" alt="${item.name}" class="w-full h-full object-contain">
         </div>
         <div>
           <span class="font-bold text-sm text-punk-black uppercase block">${item.name}</span>
-          <span class="text-punk-black/70 text-[11px] block">[MATERIAL: ${item.material.toUpperCase()}] // [SIZE: ${item.dimension}]</span>
+          <span class="text-punk-black/70 text-[11px] block">[MATERIAL: ${item.material.toUpperCase()}] [SIZE: ${item.dimension}]</span>
           <span class="font-bold text-punk-blue mt-1 block">${formatRupiah(item.unitPrice)} / pc</span>
         </div>
       </div>
@@ -1149,7 +1150,7 @@ function renderProductsCatalog(products) {
 function createProductCardHTML(product) {
   return `
     <div class="border-2 border-punk-black bg-punk-white flex flex-col justify-between font-mono text-xs">
-      <div class="bg-punk-black p-4 flex items-center justify-center relative border-b-2 border-punk-black">
+      <div class="bg-punk-gray p-4 flex items-center justify-center relative border-b-2 border-punk-black">
         <img src="${product.img}" alt="${product.name}" class="w-32 h-32 object-contain">
         <span class="absolute top-2 left-2 bg-punk-blue text-punk-white text-[9px] font-bold px-1.5 py-0.5 uppercase">
           ${product.badge}

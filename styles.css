@@ -28,10 +28,44 @@
   color: var(--black);
 }
 
+/* Navigation Buttons - Crystal Clear High Contrast */
+.nav-btn {
+  color: #000000 !important;
+  border: 2px solid transparent;
+  padding: 6px 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: all 0.1s ease;
+  background-color: transparent;
+}
+
+.nav-btn:hover {
+  border-color: #000000;
+  background-color: var(--gray-bg);
+  color: #000000 !important;
+}
+
+.nav-btn.active {
+  background-color: #000000 !important;
+  color: #FFFFFF !important;
+  border-color: #000000 !important;
+}
+
+#nav-btn-studio {
+  background-color: #0000FF !important;
+  color: #FFFFFF !important;
+  border: 2px solid #000000 !important;
+}
+
+#nav-btn-studio:hover {
+  background-color: #000000 !important;
+  color: #FFFFFF !important;
+}
+
 /* Flat, Uniform Button Styling */
 .punk-btn {
   background-color: var(--blue);
-  color: #FFFFFF;
+  color: #FFFFFF !important;
   border: 2px solid #000000;
   font-weight: 700;
   text-transform: uppercase;
@@ -41,7 +75,7 @@
 
 .punk-btn:hover {
   background-color: #000000;
-  color: #FFFFFF;
+  color: #FFFFFF !important;
 }
 
 .punk-btn:active {
