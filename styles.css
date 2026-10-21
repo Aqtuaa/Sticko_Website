@@ -62,6 +62,12 @@
   color: #FFFFFF !important;
 }
 
+#nav-btn-studio.active {
+  background-color: #000000 !important;
+  color: #FFFFFF !important;
+  border: 2px solid #000000 !important;
+}
+
 /* Flat, Uniform Button Styling */
 .punk-btn {
   background-color: var(--blue);
@@ -188,10 +194,49 @@
   pointer-events: none;
 }
 
-/* Live Transform HUD */
-#transform-hud {
+/* Red Delete Handle at Bottom Center of Frame */
+.delete-handle {
   position: absolute;
   bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 22px;
+  background-color: #FF003C;
+  color: #FFFFFF;
+  border: 2px solid #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+  z-index: 60;
+  transition: transform 0.1s ease, background-color 0.1s ease;
+  box-shadow: 2px 2px 0px #000000;
+}
+
+.delete-handle:hover {
+  background-color: #000000;
+  color: #FF003C;
+  transform: translateX(-50%) scale(1.15);
+}
+
+.delete-stem {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 8px;
+  background-color: #FF003C;
+  pointer-events: none;
+}
+
+/* Live Transform HUD Tip */
+.transform-hud-tip {
+  position: absolute;
+  top: -48px;
   left: 50%;
   transform: translateX(-50%);
   background-color: #000000;
@@ -203,11 +248,71 @@
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.15s ease;
-  z-index: 50;
+  z-index: 55;
+  border: 1px solid #333333;
 }
 
-#transform-hud.active {
+.transform-hud-tip.active {
   opacity: 1;
+}
+
+/* By default, transform outline, rotation pin, corner resize handles, and delete buttons are HIDDEN */
+.transform-outline,
+.rotate-handle,
+.rotate-stem,
+.scale-handle,
+.delete-handle,
+.delete-stem {
+  display: none !important;
+}
+
+/* Sticker Canvas Items */
+.sticker-canvas-item {
+  touch-action: none;
+  user-select: none;
+  cursor: pointer;
+  pointer-events: auto !important;
+}
+
+.sticker-canvas-item.is-selected {
+  cursor: grab;
+  z-index: 40 !important;
+}
+
+.sticker-canvas-item.is-selected:active {
+  cursor: grabbing;
+}
+
+/* Transform frame & all handles appear ONLY when sticker is active/being edited */
+.sticker-canvas-item.is-selected .transform-outline {
+  display: block !important;
+}
+
+.sticker-canvas-item.is-selected .rotate-handle {
+  display: flex !important;
+}
+
+.sticker-canvas-item.is-selected .rotate-stem {
+  display: block !important;
+}
+
+.sticker-canvas-item.is-selected .scale-handle {
+  display: block !important;
+}
+
+.sticker-canvas-item.is-selected .delete-handle {
+  display: flex !important;
+}
+
+.sticker-canvas-item.is-selected .delete-stem {
+  display: block !important;
+}
+
+/* Ensure sticker artwork has pointer-events for hit testing */
+.sticker-canvas-item img {
+  pointer-events: auto !important;
+  user-select: none !important;
+  -webkit-user-drag: none !important;
 }
 
 /* ========================================== */
@@ -307,7 +412,7 @@
 .mockup-surface {
   position: relative;
   background-color: transparent;
-  overflow: hidden;
+  overflow: visible !important;
 }
 
 .mockup-surface img.device-photo {

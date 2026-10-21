@@ -127,7 +127,7 @@
     <div id="mobile-menu" class="hidden md:hidden border-t-2 border-punk-black bg-punk-white p-4 font-mono text-xs font-bold space-y-2 uppercase">
       <button onclick="navigateTo('home'); toggleMobileMenu()" class="block w-full text-left p-2 border-2 border-punk-black hover:bg-punk-gray">01. Home</button>
       <button onclick="navigateTo('products'); toggleMobileMenu()" class="block w-full text-left p-2 border-2 border-punk-black hover:bg-punk-gray">02. Catalog</button>
-      <button onclick="navigateTo('studio'); toggleMobileMenu()" class="block w-full text-left p-2 border-2 border-punk-black bg-punk-blue text-punk-white">03. AI Custom Studio</button>
+      <button onclick="navigateTo('studio'); toggleMobileMenu()" id="mobile-nav-studio" class="block w-full text-left p-2 border-2 border-punk-black bg-punk-blue text-punk-white">03. AI Custom Studio</button>
       <button onclick="navigateTo('about'); toggleMobileMenu()" class="block w-full text-left p-2 border-2 border-punk-black hover:bg-punk-gray">04. About Us</button>
       <button onclick="navigateTo('cart'); toggleMobileMenu()" class="block w-full text-left p-2 border-2 border-punk-black bg-punk-black text-punk-white">
         <i class="fa-solid fa-cart-shopping mr-2"></i> Cart (<span id="mobile-cart-count">2</span>)
@@ -388,6 +388,10 @@
             </h1>
           </div>
           <div class="flex items-center gap-2">
+            <button onclick="addNewStickerPrompt()" class="punk-btn-secondary px-3 py-1.5 font-mono text-xs font-bold uppercase flex items-center gap-1">
+              <i class="fa-solid fa-plus text-punk-blue"></i>
+              <span>TAMBAH STIKER</span>
+            </button>
             <button onclick="resetStudioCanvas()" class="punk-btn-secondary px-3 py-1.5 font-mono text-xs font-bold uppercase">
               RESET POSISI
             </button>
@@ -403,26 +407,29 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
           <!-- Left Column: Controls (5 Cols) -->
-          <div class="lg:col-span-5 space-y-4 font-mono text-xs">
+          <div id="studio-controls-panel" class="lg:col-span-5 space-y-4 font-mono text-xs">
             
             <!-- Step 1: Upload or Presets -->
             <div class="border-2 border-punk-black bg-punk-white p-4">
               <div class="flex justify-between items-center border-b-2 border-punk-black pb-2 mb-3">
                 <span class="font-display text-sm uppercase text-punk-black">[01] UPLOAD DESAIN</span>
-                <span class="text-[10px] text-punk-black">PNG/JPG/SVG/WEBP</span>
+                <span id="active-sticker-badge" class="bg-punk-black text-punk-yellow px-1.5 py-0.5 text-[9px] font-bold uppercase">STIKER AKTIF</span>
               </div>
 
               <!-- Upload Drag & Drop Box -->
-              <div id="drop-zone" onclick="document.getElementById('sticker-file-input').click()" class="border-2 border-dashed border-punk-black bg-punk-gray hover:bg-punk-yellow/20 p-6 text-center cursor-pointer transition-colors">
+              <div id="drop-zone" onclick="document.getElementById('sticker-file-input').click()" class="border-2 border-dashed border-punk-black bg-punk-gray hover:bg-punk-yellow/20 p-5 text-center cursor-pointer transition-colors">
                 <input type="file" id="sticker-file-input" class="hidden" accept="image/*" onchange="handleFileUpload(event)">
-                <i class="fa-solid fa-upload text-xl mb-2 text-punk-blue"></i>
-                <p class="font-bold text-punk-black uppercase">KLIK ATAU DRAG FILE KE SINI</p>
-                <p class="text-[10px] text-punk-black/70 mt-1">Maksimal 10MB (Disarankan background transparan)</p>
+                <i class="fa-solid fa-cloud-arrow-up text-xl mb-1 text-punk-blue"></i>
+                <p class="font-bold text-punk-black uppercase">+ UPLOAD GAMBAR BARU KE MOCKUP</p>
+                <p class="text-[10px] text-punk-black/70 mt-0.5">PNG / JPG / SVG / WebP (Otomatis dibuatkan stiker baru)</p>
               </div>
 
               <!-- Preset Selectors -->
               <div class="mt-4 pt-3 border-t-2 border-punk-black">
-                <span class="font-bold text-[11px] uppercase block mb-2">Preset Desain Siap Uji:</span>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="font-bold text-[11px] uppercase">Preset Desain Siap Uji:</span>
+                  <span class="text-[10px] text-punk-black/60">Klik untuk tambah ke mockup</span>
+                </div>
                 <div class="grid grid-cols-5 gap-1.5" id="preset-selector-container">
                   <!-- Injected via JS -->
                 </div>
@@ -575,68 +582,47 @@
             <div id="mockup-stage-container" class="border-2 border-punk-black bg-punk-black p-4 sm:p-6 relative overflow-hidden flex flex-col items-center justify-center min-h-[500px]">
               
               <!-- Top Left Control Info -->
-              <div class="absolute top-3 left-3 font-mono text-[10px] text-punk-yellow bg-punk-darkgray border border-punk-white/20 px-2 py-1 z-20">
-                [DRAG TO MOVE] [CORNER TO RESIZE] [TOP PIN TO ROTATE]
+              <div class="absolute top-3 left-3 font-mono text-[10px] text-punk-yellow bg-punk-darkgray border border-punk-white/20 px-2 py-1 z-20 flex items-center gap-2">
+                <span>[DRAG MOVE] [CORNER RESIZE] [TOP PIN ROTATE] [X MERAH HAPUS]</span>
+              </div>
+
+              <!-- Top Right Multi-Sticker Status & Quick Add -->
+              <div class="absolute top-3 right-3 font-mono text-[10px] z-20 flex items-center gap-2">
+                <span class="bg-punk-black text-punk-white border border-punk-white/30 px-2 py-1">
+                  STIKER DI MOCKUP: <strong id="mockup-sticker-count" class="text-punk-yellow">3</strong>
+                </span>
+                <button type="button" onclick="addNewStickerPrompt()" class="bg-punk-yellow text-punk-black border border-punk-black px-2 py-1 font-bold hover:bg-punk-white transition-colors">
+                  + TAMBAH STIKER
+                </button>
               </div>
 
               <!-- DEVICE 1: LAPTOP MOCKUP PHOTO -->
               <div id="device-laptop" class="device-mockup mockup-surface relative w-full max-w-[560px] h-[360px] flex items-center justify-center">
                 <img id="mockup-img-laptop" src="assets/laptop_space_gray.png" alt="Laptop Mockup" class="device-photo">
-
-                <!-- THE INTERACTIVE STICKER WITH FIGMA-STYLE TRANSFORM BOUNDING BOX -->
-                <div id="draggable-sticker" class="absolute z-30" style="top: 80px; left: 140px; transform: scale(1) rotate(-8deg);">
-                  <div class="transform-bounding-box" id="transform-box">
-                    
-                    <!-- Bounding Blue Frame -->
-                    <div class="transform-outline"></div>
-
-                    <!-- Rotate Handle at Top Center -->
-                    <div class="rotate-stem"></div>
-                    <div class="rotate-handle" id="handle-rotate" title="Drag to Rotate">
-                      <i class="fa-solid fa-rotate"></i>
-                    </div>
-
-                    <!-- 4 Corner Scale Handles -->
-                    <div class="scale-handle handle-tl" data-corner="tl" title="Drag to Resize"></div>
-                    <div class="scale-handle handle-tr" data-corner="tr" title="Drag to Resize"></div>
-                    <div class="scale-handle handle-bl" data-corner="bl" title="Drag to Resize"></div>
-                    <div class="scale-handle handle-br" data-corner="br" title="Drag to Resize"></div>
-
-                    <!-- Live Size & Rotation HUD Tooltip -->
-                    <div id="transform-hud">1.0x | -8°</div>
-
-                    <!-- Sticker Visual Element (Transparent - No White Box) -->
-                    <div id="sticker-visual-wrapper" class="relative diecut-contour holo-foil">
-                      <img id="current-sticker-img" src="logo.png" alt="Sticker Preview" class="w-32 h-auto object-contain pointer-events-none">
-                    </div>
-
-                  </div>
-                </div>
+                <!-- Multi-Sticker Layer Container -->
+                <div id="canvas-stickers-layer" class="absolute inset-0 z-30 pointer-events-auto"></div>
               </div>
 
               <!-- DEVICE 2: TUMBLER MOCKUP PHOTO -->
               <div id="device-tumbler" class="device-mockup mockup-surface hidden relative w-full max-w-[360px] h-[400px] flex items-center justify-center">
                 <img id="mockup-img-tumbler" src="assets/tumbler_ivory.png" alt="Tumbler Mockup" class="device-photo">
-                <div id="tumbler-body-canvas" class="absolute inset-0 flex items-center justify-center"></div>
               </div>
 
               <!-- DEVICE 3: TABLET MOCKUP PHOTO -->
               <div id="device-tablet" class="device-mockup mockup-surface hidden relative w-full max-w-[500px] h-[360px] flex items-center justify-center">
                 <img id="mockup-img-tablet" src="assets/ipad_space_gray.png" alt="Tablet Mockup" class="device-photo">
-                <div id="tablet-body-canvas" class="absolute inset-0 flex items-center justify-center"></div>
               </div>
 
               <!-- DEVICE 4: SMARTPHONE MOCKUP PHOTO -->
               <div id="device-phone" class="device-mockup mockup-surface hidden relative w-full max-w-[360px] h-[380px] flex items-center justify-center">
                 <img id="mockup-img-phone" src="assets/iphone_silver.png" alt="Phone Mockup" class="device-photo">
-                <div id="phone-body-canvas" class="absolute inset-0 flex items-center justify-center"></div>
               </div>
 
             </div>
 
             <!-- Notice Callout -->
             <div class="border-2 border-punk-black bg-punk-gray p-3 font-mono text-xs text-punk-black">
-              <span class="font-bold text-punk-blue">[KONTROL INTERAKTIF]:</span> Klik dan geser badan stiker untuk memindahkan posisi. Tarik <strong>kotak di pojok stiker</strong> untuk memperbesar/memperkecil, dan tarik <strong>lingkaran di atas</strong> untuk memutar sudut stiker!
+              <span class="font-bold text-punk-blue">[MULTI-STICKER STUDIO]:</span> Klik stiker untuk mengedit (munculkan frame geser, resize, rotate, & tombol hapus merah). Klik area luar stiker untuk menyembunyikan frame agar mockup tampil bersih dan realistis.
             </div>
 
           </div>

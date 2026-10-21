@@ -53,25 +53,25 @@ const PRESET_STICKERS = [
   {
     id: 'cyber-cat',
     name: 'Anarchy Neon Cat',
-    img: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400&auto=format&fit=crop&q=80',
+    img: 'assets/Sticker/catGlitter.png',
     category: 'anime'
   },
   {
     id: 'retro-coffee',
     name: 'Midnight Caffeine Riot',
-    img: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400&auto=format&fit=crop&q=80',
+    img: 'assets/Sticker/hiuHolo.png',
     category: 'aesthetic'
   },
   {
     id: 'astro-explorer',
     name: 'Zero Gravity Voyager',
-    img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&auto=format&fit=crop&q=80',
+    img: 'assets/Sticker/PersonaCritical.png',
     category: 'holographic'
   },
   {
     id: 'dev-terminal',
     name: 'Kernel Panic Root Access',
-    img: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&auto=format&fit=crop&q=80',
+    img: 'assets/Sticker/ferrariHolo.png',
     category: 'tech'
   }
 ];
@@ -204,23 +204,62 @@ const state = {
     }
   ],
   studio: {
-    currentImage: 'logo.png',
-    stickerTitle: 'STIKO Graffiti Tag Official',
-    material: 'holographic',
-    dimensionKey: '7x7',
-    dimensionLabel: '7 × 7 CM (SEDANG)',
-    aiCropActive: true,
-    outlineWidth: 6,
-    aiUpscaleActive: true,
-    quantity: 5,
+    stickers: [
+      {
+        id: 'stk-1',
+        name: 'STIKO Graffiti Tag Official',
+        img: 'logo.png',
+        x: 60,
+        y: 40,
+        scale: 0.95,
+        rotate: -6,
+        material: 'holographic',
+        dimensionKey: '7x7',
+        dimensionLabel: '7 × 7 CM (SEDANG)',
+        unitPrice: 9000,
+        quantity: 5,
+        aiCropActive: true,
+        outlineWidth: 6,
+        aiUpscaleActive: true
+      },
+      {
+        id: 'stk-2',
+        name: 'Cyber Skull Streetwear',
+        img: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400&auto=format&fit=crop&q=80',
+        x: 240,
+        y: 60,
+        scale: 0.85,
+        rotate: 12,
+        material: 'vinyl-matte',
+        dimensionKey: '7x7',
+        dimensionLabel: '7 × 7 CM (SEDANG)',
+        unitPrice: 7500,
+        quantity: 5,
+        aiCropActive: true,
+        outlineWidth: 6,
+        aiUpscaleActive: true
+      },
+      {
+        id: 'stk-3',
+        name: 'Acid Smile Y2K',
+        img: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400&auto=format&fit=crop&q=80',
+        x: 160,
+        y: 165,
+        scale: 0.8,
+        rotate: -15,
+        material: 'glitter',
+        dimensionKey: '5x5',
+        dimensionLabel: '5 × 5 CM (PAS UNTUK HP)',
+        unitPrice: 8500,
+        quantity: 5,
+        aiCropActive: true,
+        outlineWidth: 6,
+        aiUpscaleActive: true
+      }
+    ],
+    selectedStickerId: null,
     activeDevice: 'laptop',
-    activeDeviceColor: 'space-gray',
-    transform: {
-      x: 80,
-      y: 50,
-      scale: 1.0,
-      rotate: -8
-    }
+    activeDeviceColor: 'space-gray'
   },
   promo: {
     code: '',
@@ -249,6 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderProductsCatalog(PRODUCTS_DATA);
   renderDeviceColorButtons();
   updateCartBadges();
+  renderCanvasStickers();
   initFigmaStyleTransformEngine();
   calculateStudioPrice();
   initDropZone();
@@ -289,10 +329,17 @@ function navigateTo(pageId) {
 
   const activeBtn = document.getElementById(`nav-btn-${pageId}`);
   if (activeBtn) {
+    // When studio is active, it turns black (distinct from its default standby blue look)
+    activeBtn.className = 'nav-btn active px-3 py-1.5 border-2 border-punk-black bg-punk-black text-punk-white';
+  }
+
+  // Update mobile drawer studio button color
+  const mobileStudioBtn = document.getElementById('mobile-nav-studio');
+  if (mobileStudioBtn) {
     if (pageId === 'studio') {
-      activeBtn.className = 'nav-btn px-3 py-1.5 border-2 border-punk-black bg-punk-blue text-punk-white active';
+      mobileStudioBtn.className = 'block w-full text-left p-2 border-2 border-punk-black bg-punk-black text-punk-white';
     } else {
-      activeBtn.className = 'nav-btn px-3 py-1.5 border-2 border-punk-black bg-punk-black text-punk-white active';
+      mobileStudioBtn.className = 'block w-full text-left p-2 border-2 border-punk-black bg-punk-blue text-punk-white';
     }
   }
 
@@ -301,7 +348,7 @@ function navigateTo(pageId) {
   } else if (pageId === 'payment') {
     renderPaymentPage();
   } else if (pageId === 'studio') {
-    clampStickerInsideDevice();
+    renderCanvasStickers();
   }
 }
 
@@ -318,36 +365,94 @@ function toggleMobileMenu() {
 }
 
 // ==========================================
-// STUDIO PRESETS & FILE HANDLING
+// STUDIO PRESETS & MULTI-STICKER HANDLING
 // ==========================================
 function renderPresetSelectors() {
   const container = document.getElementById('preset-selector-container');
   if (!container) return;
 
-  container.innerHTML = PRESET_STICKERS.map((preset, index) => `
-    <button onclick="selectPreset('${preset.id}', this)" class="preset-btn p-1 border-2 ${index === 0 ? 'border-punk-blue bg-punk-gray' : 'border-punk-black bg-punk-white'} transition-colors" title="${preset.name}">
+  container.innerHTML = PRESET_STICKERS.map((preset) => `
+    <button onclick="selectPreset('${preset.id}')" class="preset-btn p-1 border-2 border-punk-black bg-punk-white hover:border-punk-blue hover:bg-punk-gray transition-colors" title="Klik untuk tambah: ${preset.name}">
       <img src="${preset.img}" alt="${preset.name}" class="w-full h-8 object-contain">
     </button>
   `).join('');
 }
 
-function selectPreset(presetId, element) {
+function selectPreset(presetId) {
   const preset = PRESET_STICKERS.find(p => p.id === presetId);
   if (!preset) return;
 
-  state.studio.currentImage = preset.img;
-  state.studio.stickerTitle = preset.name;
-  updateStickerVisuals();
+  addNewSticker(preset.img, preset.name);
+}
 
-  document.querySelectorAll('.preset-btn').forEach(btn => {
-    btn.classList.remove('border-punk-blue', 'bg-punk-gray');
-    btn.classList.add('border-punk-black', 'bg-punk-white');
-  });
+function addNewStickerPrompt() {
+  const nextIdx = state.studio.stickers.length % PRESET_STICKERS.length;
+  const preset = PRESET_STICKERS[nextIdx];
+  addNewSticker(preset.img, preset.name);
+}
 
-  if (element) {
-    element.classList.remove('border-punk-black', 'bg-punk-white');
-    element.classList.add('border-punk-blue', 'bg-punk-gray');
+function addNewSticker(img, name, material = 'holographic') {
+  const newId = 'stk-' + Date.now();
+  const count = state.studio.stickers.length;
+  const offsetX = 50 + ((count * 75) % 260);
+  const offsetY = 50 + ((count * 45) % 170);
+
+  const newSticker = {
+    id: newId,
+    name: name || 'Custom Sticker',
+    img: img || 'logo.png',
+    x: offsetX,
+    y: offsetY,
+    scale: 0.9,
+    rotate: (count % 2 === 0 ? -1 : 1) * (5 + (count * 4) % 25),
+    material: material,
+    dimensionKey: '7x7',
+    dimensionLabel: '7 × 7 CM (SEDANG)',
+    unitPrice: 9000,
+    quantity: 5,
+    aiCropActive: true,
+    outlineWidth: 6,
+    aiUpscaleActive: true
+  };
+
+  state.studio.stickers.push(newSticker);
+  state.studio.selectedStickerId = newId;
+  renderCanvasStickers();
+}
+
+function deleteSticker(stickerId, event) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
   }
+
+  const idx = state.studio.stickers.findIndex(s => s.id === stickerId);
+  if (idx !== -1) {
+    state.studio.stickers.splice(idx, 1);
+    state.studio.selectedStickerId = null;
+    renderCanvasStickers();
+  }
+}
+
+function deselectAllStickers() {
+  if (state.studio.selectedStickerId === null) return;
+  state.studio.selectedStickerId = null;
+  document.querySelectorAll('.sticker-canvas-item').forEach(el => {
+    el.classList.remove('is-selected', 'z-40');
+    el.classList.add('z-20');
+  });
+  updateStudioControlsForSelected();
+}
+
+function getSelectedSticker() {
+  if (!state.studio.stickers || state.studio.stickers.length === 0) return null;
+  const found = state.studio.stickers.find(s => s.id === state.studio.selectedStickerId);
+  return found || state.studio.stickers[0];
+}
+
+function selectSticker(stickerId) {
+  state.studio.selectedStickerId = stickerId;
+  renderCanvasStickers();
 }
 
 function initDropZone() {
@@ -392,11 +497,9 @@ function loadCustomImageFile(file) {
 
   const reader = new FileReader();
   reader.onload = (e) => {
-    state.studio.currentImage = e.target.result;
-    state.studio.stickerTitle = file.name.replace(/\.[^/.]+$/, "") || 'Custom Sticker';
-    
+    const title = file.name.replace(/\.[^/.]+$/, "") || 'Custom Sticker';
+    addNewSticker(e.target.result, title);
     showAiScanNotification();
-    updateStickerVisuals();
   };
   reader.readAsDataURL(file);
 }
@@ -412,16 +515,23 @@ function showAiScanNotification() {
 }
 
 function toggleAiCrop(isActive) {
-  state.studio.aiCropActive = isActive;
+  const sticker = getSelectedSticker();
+  if (sticker) {
+    sticker.aiCropActive = isActive;
+  }
   const outlineControls = document.getElementById('outline-controls');
   if (outlineControls) {
     outlineControls.style.display = isActive ? 'flex' : 'none';
   }
-  updateStickerVisuals();
+  renderCanvasStickers();
 }
 
 function setOutlineWidth(widthPx, element) {
-  state.studio.outlineWidth = widthPx;
+  const sticker = getSelectedSticker();
+  if (sticker) {
+    sticker.outlineWidth = widthPx;
+  }
+
   document.querySelectorAll('.outline-btn').forEach(btn => {
     btn.classList.remove('active', 'punk-btn');
     btn.classList.add('punk-btn-secondary');
@@ -432,11 +542,14 @@ function setOutlineWidth(widthPx, element) {
     element.classList.remove('punk-btn-secondary');
   }
 
-  updateStickerVisuals();
+  renderCanvasStickers();
 }
 
 function toggleAiUpscale(isActive) {
-  state.studio.aiUpscaleActive = isActive;
+  const sticker = getSelectedSticker();
+  if (sticker) {
+    sticker.aiUpscaleActive = isActive;
+  }
   const indicator = document.getElementById('upscale-indicator');
   if (indicator) {
     if (isActive) {
@@ -445,11 +558,14 @@ function toggleAiUpscale(isActive) {
       indicator.textContent = '[AI UPSCALE OFF: RESOLUSI STANDAR]';
     }
   }
-  updateStickerVisuals();
+  renderCanvasStickers();
 }
 
 function selectMaterial(materialKey, element) {
-  state.studio.material = materialKey;
+  const sticker = getSelectedSticker();
+  if (sticker) {
+    sticker.material = materialKey;
+  }
 
   document.querySelectorAll('.material-card').forEach(card => {
     card.classList.remove('border-punk-blue', 'bg-punk-gray');
@@ -461,13 +577,19 @@ function selectMaterial(materialKey, element) {
     element.classList.add('border-punk-blue', 'bg-punk-gray');
   }
 
-  updateStickerVisuals();
   calculateStudioPrice();
+  renderCanvasStickers();
 }
 
 function setDimension(dimKey, label, element) {
-  state.studio.dimensionKey = dimKey;
-  state.studio.dimensionLabel = label;
+  const sticker = getSelectedSticker();
+  if (sticker) {
+    sticker.dimensionKey = dimKey;
+    sticker.dimensionLabel = label;
+    const scaleMap = { '5x5': 0.75, '7x7': 1.0, '10x10': 1.35 };
+    sticker.scale = scaleMap[dimKey] || 1.0;
+  }
+
   document.getElementById('dimension-label').textContent = label;
 
   document.querySelectorAll('.dimension-btn').forEach(btn => {
@@ -480,10 +602,8 @@ function setDimension(dimKey, label, element) {
     element.classList.remove('punk-btn-secondary');
   }
 
-  const scaleMap = { '5x5': 0.75, '7x7': 1.0, '10x10': 1.35 };
-  state.studio.transform.scale = scaleMap[dimKey] || 1.0;
-  applyStickerTransform();
   calculateStudioPrice();
+  renderCanvasStickers();
 }
 
 function updateStudioQty(delta) {
@@ -491,17 +611,22 @@ function updateStudioQty(delta) {
   let currentVal = parseInt(input.value) || 1;
   currentVal = Math.max(1, Math.min(500, currentVal + delta));
   input.value = currentVal;
-  state.studio.quantity = currentVal;
+  
+  const sticker = getSelectedSticker();
+  if (sticker) {
+    sticker.quantity = currentVal;
+  }
   calculateStudioPrice();
 }
 
 function calculateStudioPrice() {
-  const qty = parseInt(document.getElementById('studio-qty-input').value) || 1;
-  state.studio.quantity = qty;
+  const sticker = getSelectedSticker();
+  const qty = parseInt(document.getElementById('studio-qty-input')?.value) || 5;
 
   let basePrice = 6000;
-  if (state.studio.dimensionKey === '7x7') basePrice = 7500;
-  if (state.studio.dimensionKey === '10x10') basePrice = 11000;
+  const dimKey = sticker ? sticker.dimensionKey : '7x7';
+  if (dimKey === '7x7') basePrice = 7500;
+  if (dimKey === '10x10') basePrice = 11000;
 
   const materialSurcharges = {
     'holographic': 3000,
@@ -509,7 +634,8 @@ function calculateStudioPrice() {
     'glossy-uv': 1000,
     'glitter': 3500
   };
-  const unitPrice = basePrice + (materialSurcharges[state.studio.material] || 0);
+  const matKey = sticker ? sticker.material : 'holographic';
+  const unitPrice = basePrice + (materialSurcharges[matKey] || 0);
 
   let discountRate = 1.0;
   if (qty >= 10 && qty < 50) discountRate = 0.85;
@@ -517,8 +643,10 @@ function calculateStudioPrice() {
 
   const totalPrice = Math.round(unitPrice * qty * discountRate);
 
-  document.getElementById('studio-total-price').textContent = formatRupiah(totalPrice).toUpperCase();
-  document.getElementById('studio-unit-price').textContent = `${formatRupiah(unitPrice)} / pc (${getMaterialName(state.studio.material)})`;
+  const totalPriceEl = document.getElementById('studio-total-price');
+  const unitPriceEl = document.getElementById('studio-unit-price');
+  if (totalPriceEl) totalPriceEl.textContent = formatRupiah(totalPrice).toUpperCase();
+  if (unitPriceEl) unitPriceEl.textContent = `${formatRupiah(unitPrice)} / pc (${getMaterialName(matKey)})`;
 }
 
 function getMaterialName(key) {
@@ -531,31 +659,137 @@ function getMaterialName(key) {
   return map[key] || 'Vinyl Matte';
 }
 
-function updateStickerVisuals() {
-  const imgElement = document.getElementById('current-sticker-img');
-  const visualWrapper = document.getElementById('sticker-visual-wrapper');
-
-  if (imgElement) {
-    imgElement.src = state.studio.currentImage;
-    imgElement.style.filter = state.studio.aiUpscaleActive ? 'contrast(1.1) saturate(1.1)' : 'none';
+function updateStudioControlsForSelected() {
+  const sticker = getSelectedSticker();
+  const badge = document.getElementById('active-sticker-badge');
+  if (!sticker) {
+    if (badge) badge.textContent = 'TIDAK ADA STIKER';
+    return;
   }
 
-  if (visualWrapper) {
-    visualWrapper.classList.remove('diecut-contour', 'diecut-thick', 'diecut-thin', 'holo-foil');
+  if (badge) badge.textContent = `STIKER: ${sticker.name.substring(0, 16).toUpperCase()}`;
 
-    if (state.studio.aiCropActive) {
-      visualWrapper.classList.add('diecut-contour');
-      if (state.studio.outlineWidth >= 10) {
-        visualWrapper.classList.add('diecut-thick');
-      } else if (state.studio.outlineWidth <= 3) {
-        visualWrapper.classList.add('diecut-thin');
-      }
+  // Update material cards
+  document.querySelectorAll('.material-card').forEach(card => {
+    const isThis = card.getAttribute('onclick')?.includes(sticker.material);
+    if (isThis) {
+      card.classList.remove('border-punk-black', 'bg-punk-white');
+      card.classList.add('border-punk-blue', 'bg-punk-gray');
+    } else {
+      card.classList.remove('border-punk-blue', 'bg-punk-gray');
+      card.classList.add('border-punk-black', 'bg-punk-white');
     }
+  });
 
-    if (state.studio.material === 'holographic') {
-      visualWrapper.classList.add('holo-foil');
+  // Update dimension
+  const dimLabel = document.getElementById('dimension-label');
+  if (dimLabel) dimLabel.textContent = sticker.dimensionLabel;
+  document.querySelectorAll('.dimension-btn').forEach(btn => {
+    const isThis = btn.getAttribute('onclick')?.includes(`'${sticker.dimensionKey}'`);
+    if (isThis) {
+      btn.classList.add('active', 'punk-btn');
+      btn.classList.remove('punk-btn-secondary');
+    } else {
+      btn.classList.remove('active', 'punk-btn');
+      btn.classList.add('punk-btn-secondary');
     }
+  });
+
+  // Update qty input
+  const qtyInput = document.getElementById('studio-qty-input');
+  if (qtyInput) qtyInput.value = sticker.quantity || 5;
+
+  // Update AI toggles
+  const cropToggle = document.getElementById('ai-crop-toggle');
+  if (cropToggle) cropToggle.checked = !!sticker.aiCropActive;
+  const upscaleToggle = document.getElementById('ai-upscale-toggle');
+  if (upscaleToggle) upscaleToggle.checked = !!sticker.aiUpscaleActive;
+
+  calculateStudioPrice();
+}
+
+// ==========================================
+// RENDER MULTI-STICKER CANVAS & LAYER
+// ==========================================
+function renderCanvasStickers() {
+  const layer = document.getElementById('canvas-stickers-layer');
+  const countEl = document.getElementById('mockup-sticker-count');
+  if (countEl) countEl.textContent = state.studio.stickers.length;
+
+  if (!layer) return;
+
+  if (state.studio.stickers.length === 0) {
+    layer.innerHTML = `
+      <div class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center pointer-events-none">
+        <div class="bg-punk-black/90 border-2 border-punk-yellow p-4 text-punk-white font-mono text-xs max-w-xs space-y-2">
+          <p class="font-bold text-punk-yellow">[CANVAS KOSONG]</p>
+          <p class="text-[11px] text-punk-white/80">Semua stiker telah dihapus. Klik preset di bawah atau upload gambar baru untuk menempel stiker!</p>
+          <button onclick="addNewStickerPrompt()" class="punk-btn px-3 py-1 text-[11px] font-bold pointer-events-auto mt-2">
+            + TAMBAH STIKER
+          </button>
+        </div>
+      </div>
+    `;
+    updateStudioControlsForSelected();
+    return;
   }
+
+  layer.innerHTML = state.studio.stickers.map(s => {
+    const isSelected = s.id === state.studio.selectedStickerId;
+    return `
+      <div id="sticker-item-${s.id}" 
+           class="sticker-canvas-item absolute cursor-grab ${isSelected ? 'is-selected z-40' : 'z-20'}" 
+           data-sticker-id="${s.id}"
+           style="left: ${s.x}px; top: ${s.y}px; transform: scale(${s.scale}) rotate(${s.rotate}deg);">
+        
+        <div class="transform-bounding-box" id="transform-box-${s.id}">
+          
+          <!-- Bounding Blue Frame (Visible if selected) -->
+          <div class="transform-outline ${isSelected ? 'block' : 'hidden'}"></div>
+
+          <!-- Rotate Handle at Top Center (Visible if selected) -->
+          <div class="rotate-stem ${isSelected ? 'block' : 'hidden'}"></div>
+          <div class="rotate-handle ${isSelected ? 'flex' : 'hidden'}" data-role="rotate" data-sticker-id="${s.id}" title="Tarik untuk memutar">
+            <i class="fa-solid fa-rotate pointer-events-none"></i>
+          </div>
+
+          <!-- 4 Corner Scale Handles (Visible if selected) -->
+          <div class="scale-handle handle-tl ${isSelected ? 'block' : 'hidden'}" data-role="scale" data-corner="tl" data-sticker-id="${s.id}" title="Tarik untuk resize"></div>
+          <div class="scale-handle handle-tr ${isSelected ? 'block' : 'hidden'}" data-role="scale" data-corner="tr" data-sticker-id="${s.id}" title="Tarik untuk resize"></div>
+          <div class="scale-handle handle-bl ${isSelected ? 'block' : 'hidden'}" data-role="scale" data-corner="bl" data-sticker-id="${s.id}" title="Tarik untuk resize"></div>
+          <div class="scale-handle handle-br ${isSelected ? 'block' : 'hidden'}" data-role="scale" data-corner="br" data-sticker-id="${s.id}" title="Tarik untuk resize"></div>
+
+          <!-- Live Size & Rotation HUD Tooltip -->
+          <div id="transform-hud-${s.id}" class="transform-hud-tip ${isSelected ? 'active' : ''}">${s.scale.toFixed(2)}x | ${s.rotate}°</div>
+
+          <!-- Red Delete 'X' Button at Bottom Center of Frame -->
+          <div class="delete-stem ${isSelected ? 'block' : 'hidden'}"></div>
+          <button type="button" 
+                  class="delete-handle ${isSelected ? 'flex' : 'hidden'}" 
+                  data-role="delete" 
+                  data-sticker-id="${s.id}" 
+                  onclick="deleteSticker('${s.id}', event)" 
+                  onpointerdown="event.stopPropagation()"
+                  title="Hapus Stiker Ini">
+            <i class="fa-solid fa-xmark pointer-events-none text-xs"></i>
+          </button>
+
+          <!-- Sticker Visual Element (Transparent Die-Cut contour) -->
+          <div class="relative ${s.aiCropActive ? 'diecut-contour' : ''} ${s.outlineWidth >= 10 ? 'diecut-thick' : (s.outlineWidth <= 3 ? 'diecut-thin' : '')} ${s.material === 'holographic' ? 'holo-foil' : ''}">
+            <img src="${s.img}" 
+                 alt="${s.name}" 
+                 draggable="false"
+                 oncontextmenu="return false;"
+                 class="w-28 sm:w-32 h-auto object-contain select-none cursor-grab" 
+                 style="filter: ${s.aiUpscaleActive ? 'contrast(1.1) saturate(1.1)' : 'none'}; pointer-events: auto;">
+          </div>
+
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  updateStudioControlsForSelected();
 }
 
 // ==========================================
@@ -580,9 +814,11 @@ function switchMockupDevice(deviceKey, element) {
   if (targetDevice) {
     targetDevice.classList.remove('hidden');
     
-    // Move sticker into target device
-    const sticker = document.getElementById('draggable-sticker');
-    targetDevice.appendChild(sticker);
+    // Move canvas-stickers-layer into target device
+    const layer = document.getElementById('canvas-stickers-layer');
+    if (layer) {
+      targetDevice.appendChild(layer);
+    }
   }
 
   // Set default color variant for this device
@@ -591,9 +827,7 @@ function switchMockupDevice(deviceKey, element) {
     selectMockupColor(deviceConfig.colors[0].id);
   }
   renderDeviceColorButtons();
-
-  clampStickerInsideDevice();
-  applyStickerTransform();
+  renderCanvasStickers();
 }
 
 function renderDeviceColorButtons() {
@@ -628,39 +862,30 @@ function selectMockupColor(colorId) {
 
 // ==========================================
 // FIGMA-STYLE ON-CANVAS TRANSFORM ENGINE
-// (DRAG TO MOVE // CORNERS TO SCALE // TOP PIN TO ROTATE)
+// (DRAG MOVE / CORNER SCALE / TOP PIN ROTATE / BOTTOM RED X DELETE)
 // ==========================================
-function applyStickerTransform() {
-  const sticker = document.getElementById('draggable-sticker');
-  const hud = document.getElementById('transform-hud');
-
-  if (sticker) {
-    sticker.style.left = `${state.studio.transform.x}px`;
-    sticker.style.top = `${state.studio.transform.y}px`;
-    sticker.style.transform = `scale(${state.studio.transform.scale}) rotate(${state.studio.transform.rotate}deg)`;
-  }
-
-  if (hud) {
-    hud.textContent = `${state.studio.transform.scale.toFixed(2)}x | ${state.studio.transform.rotate}°`;
-  }
-}
-
 function resetStudioCanvas() {
-  state.studio.transform.x = 80;
-  state.studio.transform.y = 50;
-  state.studio.transform.scale = 1.0;
-  state.studio.transform.rotate = -8;
-  applyStickerTransform();
+  if (!state.studio.stickers || state.studio.stickers.length === 0) return;
+  
+  state.studio.stickers.forEach((s, idx) => {
+    s.x = 40 + (idx * 85) % 270;
+    s.y = 40 + (idx * 55) % 180;
+    s.scale = 0.85;
+    s.rotate = (idx % 2 === 0 ? -1 : 1) * (4 + (idx * 5) % 20);
+  });
+  renderCanvasStickers();
 }
 
 function initFigmaStyleTransformEngine() {
-  const sticker = document.getElementById('draggable-sticker');
-  const box = document.getElementById('transform-box');
-  const rotateHandle = document.getElementById('handle-rotate');
-  const hud = document.getElementById('transform-hud');
-  if (!sticker || !box) return;
+  const mockupContainer = document.getElementById('mockup-stage-container');
+  if (!mockupContainer) return;
 
   let currentMode = null; // 'drag', 'scale', 'rotate'
+  let activeStickerId = null;
+  let activeStickerEl = null;
+  let activeBoxEl = null;
+  let activeHudEl = null;
+
   let startX = 0;
   let startY = 0;
   let initialLeft = 0;
@@ -670,127 +895,171 @@ function initFigmaStyleTransformEngine() {
   let initialAngle = 0;
   let stickerCenter = { x: 0, y: 0 };
 
-  function showHud() { if (hud) hud.classList.add('active'); }
-  function hideHud() { if (hud) hud.classList.remove('active'); }
+  mockupContainer.addEventListener('pointerdown', (e) => {
+    // 1. If clicking delete button, let click handler run or handle here
+    const deleteBtn = e.target.closest('[data-role="delete"]');
+    if (deleteBtn) {
+      e.stopPropagation();
+      const stickerId = deleteBtn.getAttribute('data-sticker-id');
+      deleteSticker(stickerId, e);
+      return;
+    }
 
-  // 1. ROTATE HANDLE LISTENER
-  if (rotateHandle) {
-    rotateHandle.addEventListener('pointerdown', (e) => {
+    // 2. Find clicked sticker
+    const stickerItem = e.target.closest('.sticker-canvas-item');
+    if (!stickerItem) return;
+
+    const stickerId = stickerItem.getAttribute('data-sticker-id');
+    const stickerData = state.studio.stickers.find(s => s.id === stickerId);
+    if (!stickerData) return;
+
+    // Select sticker without wiping innerHTML (keeps pointer capture active!)
+    if (state.studio.selectedStickerId !== stickerId) {
+      state.studio.selectedStickerId = stickerId;
+      
+      document.querySelectorAll('.sticker-canvas-item').forEach(el => {
+        el.classList.remove('is-selected', 'z-40');
+        el.classList.add('z-20');
+        el.querySelectorAll('.transform-outline, .rotate-handle, .rotate-stem, .scale-handle, .delete-handle, .delete-stem').forEach(c => {
+          c.classList.add('hidden');
+          c.classList.remove('flex', 'block');
+        });
+      });
+
+      stickerItem.classList.add('is-selected', 'z-40');
+      stickerItem.classList.remove('z-20');
+      stickerItem.querySelectorAll('.transform-outline, .rotate-stem, .scale-handle, .delete-stem').forEach(c => {
+        c.classList.remove('hidden');
+        c.classList.add('block');
+      });
+      stickerItem.querySelectorAll('.rotate-handle, .delete-handle').forEach(c => {
+        c.classList.remove('hidden');
+        c.classList.add('flex');
+      });
+
+      updateStudioControlsForSelected();
+    }
+
+    activeStickerId = stickerId;
+    activeStickerEl = stickerItem;
+    activeBoxEl = document.getElementById(`transform-box-${stickerId}`);
+    activeHudEl = document.getElementById(`transform-hud-${stickerId}`);
+    if (!activeStickerEl || !activeBoxEl) return;
+
+    // Check if rotate handle clicked
+    const rotateHandle = e.target.closest('[data-role="rotate"]');
+    if (rotateHandle) {
       e.stopPropagation();
       e.preventDefault();
       currentMode = 'rotate';
-      showHud();
+      if (activeHudEl) activeHudEl.classList.add('active');
 
-      const rect = box.getBoundingClientRect();
+      const rect = activeBoxEl.getBoundingClientRect();
       stickerCenter = {
         x: rect.left + rect.width / 2,
         y: rect.top + rect.height / 2
       };
 
       const rad = Math.atan2(e.clientY - stickerCenter.y, e.clientX - stickerCenter.x);
-      initialAngle = (rad * (180 / Math.PI)) - state.studio.transform.rotate;
+      initialAngle = (rad * (180 / Math.PI)) - stickerData.rotate;
 
       window.addEventListener('pointermove', onPointerMove);
       window.addEventListener('pointerup', onPointerUp);
-    });
-  }
+      return;
+    }
 
-  // 2. CORNER SCALE HANDLES LISTENER
-  document.querySelectorAll('.scale-handle').forEach(handle => {
-    handle.addEventListener('pointerdown', (e) => {
+    // Check if corner scale handle clicked
+    const scaleHandle = e.target.closest('[data-role="scale"]');
+    if (scaleHandle) {
       e.stopPropagation();
       e.preventDefault();
       currentMode = 'scale';
-      showHud();
+      if (activeHudEl) activeHudEl.classList.add('active');
 
-      const rect = box.getBoundingClientRect();
+      const rect = activeBoxEl.getBoundingClientRect();
       stickerCenter = {
         x: rect.left + rect.width / 2,
         y: rect.top + rect.height / 2
       };
 
       initialDistance = Math.hypot(e.clientX - stickerCenter.x, e.clientY - stickerCenter.y);
-      initialScale = state.studio.transform.scale;
+      initialScale = stickerData.scale;
 
       window.addEventListener('pointermove', onPointerMove);
       window.addEventListener('pointerup', onPointerUp);
-    });
-  });
+      return;
+    }
 
-  // 3. MOVE / TRANSLATE LISTENER (Click inside sticker)
-  box.addEventListener('pointerdown', (e) => {
-    // Avoid triggering move when clicking handles
-    if (e.target.closest('.scale-handle') || e.target.closest('.rotate-handle')) return;
-    
+    // Otherwise it's drag to move!
     e.preventDefault();
     currentMode = 'drag';
-    showHud();
+    if (activeHudEl) activeHudEl.classList.add('active');
 
     startX = e.clientX;
     startY = e.clientY;
-    initialLeft = state.studio.transform.x;
-    initialTop = state.studio.transform.y;
+    initialLeft = stickerData.x;
+    initialTop = stickerData.y;
 
     window.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointerup', onPointerUp);
   });
 
   function onPointerMove(e) {
-    if (!currentMode) return;
+    if (!currentMode || !activeStickerId) return;
     if (e.cancelable) e.preventDefault();
+
+    const stickerData = state.studio.stickers.find(s => s.id === activeStickerId);
+    if (!stickerData || !activeStickerEl) return;
 
     if (currentMode === 'drag') {
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
-      state.studio.transform.x = initialLeft + dx;
-      state.studio.transform.y = initialTop + dy;
-      clampStickerInsideDevice();
+      stickerData.x = Math.round(initialLeft + dx);
+      stickerData.y = Math.round(initialTop + dy);
+      
+      activeStickerEl.style.left = `${stickerData.x}px`;
+      activeStickerEl.style.top = `${stickerData.y}px`;
     } else if (currentMode === 'scale') {
       const currentDist = Math.hypot(e.clientX - stickerCenter.x, e.clientY - stickerCenter.y);
       const ratio = currentDist / Math.max(10, initialDistance);
-      const newScale = Math.max(0.4, Math.min(2.5, initialScale * ratio));
-      state.studio.transform.scale = parseFloat(newScale.toFixed(2));
+      const newScale = Math.max(0.35, Math.min(2.5, initialScale * ratio));
+      stickerData.scale = parseFloat(newScale.toFixed(2));
+
+      activeStickerEl.style.transform = `scale(${stickerData.scale}) rotate(${stickerData.rotate}deg)`;
+      if (activeHudEl) activeHudEl.textContent = `${stickerData.scale.toFixed(2)}x | ${stickerData.rotate}°`;
     } else if (currentMode === 'rotate') {
       const rad = Math.atan2(e.clientY - stickerCenter.y, e.clientX - stickerCenter.x);
       let deg = Math.round((rad * (180 / Math.PI)) - initialAngle);
-      // Normalize angle between -180 and 180
       deg = (deg % 360);
       if (deg > 180) deg -= 360;
       if (deg < -180) deg += 360;
-      state.studio.transform.rotate = deg;
-    }
+      stickerData.rotate = deg;
 
-    applyStickerTransform();
+      activeStickerEl.style.transform = `scale(${stickerData.scale}) rotate(${stickerData.rotate}deg)`;
+      if (activeHudEl) activeHudEl.textContent = `${stickerData.scale.toFixed(2)}x | ${stickerData.rotate}°`;
+    }
   }
 
   function onPointerUp() {
+    if (activeHudEl) activeHudEl.classList.remove('active');
     currentMode = null;
-    hideHud();
+    activeStickerId = null;
+    activeStickerEl = null;
+    activeBoxEl = null;
+    activeHudEl = null;
     window.removeEventListener('pointermove', onPointerMove);
     window.removeEventListener('pointerup', onPointerUp);
   }
-}
-
-function clampStickerInsideDevice() {
-  const sticker = document.getElementById('draggable-sticker');
-  if (!sticker || !sticker.parentElement) return;
-
-  const parent = sticker.parentElement;
-  const parentWidth = parent.clientWidth || 300;
-  const parentHeight = parent.clientHeight || 250;
-
-  state.studio.transform.x = Math.max(-20, Math.min(parentWidth - 60, state.studio.transform.x));
-  state.studio.transform.y = Math.max(-20, Math.min(parentHeight - 60, state.studio.transform.y));
 }
 
 // ==========================================
 // CART LOGIC
 // ==========================================
 function addCustomToCart() {
-  const qty = state.studio.quantity;
-  let basePrice = 6000;
-  if (state.studio.dimensionKey === '7x7') basePrice = 7500;
-  if (state.studio.dimensionKey === '10x10') basePrice = 11000;
+  if (!state.studio.stickers || state.studio.stickers.length === 0) {
+    alert('Belum ada stiker di mockup. Tambahkan stiker terlebih dahulu!');
+    return;
+  }
 
   const materialSurcharges = {
     'holographic': 3000,
@@ -798,24 +1067,31 @@ function addCustomToCart() {
     'glossy-uv': 1000,
     'glitter': 3500
   };
-  const unitPrice = basePrice + (materialSurcharges[state.studio.material] || 0);
 
-  const newItem = {
-    id: `custom-${Date.now()}`,
-    productId: 'custom-ai',
-    name: `${state.studio.stickerTitle} [CUSTOM]`,
-    material: getMaterialName(state.studio.material),
-    dimension: state.studio.dimensionLabel,
-    unitPrice: unitPrice,
-    quantity: qty,
-    img: state.studio.currentImage,
-    isCustom: true
-  };
+  state.studio.stickers.forEach((stk, idx) => {
+    let basePrice = 6000;
+    if (stk.dimensionKey === '7x7') basePrice = 7500;
+    if (stk.dimensionKey === '10x10') basePrice = 11000;
+    const unitPrice = basePrice + (materialSurcharges[stk.material] || 0);
 
-  state.cart.unshift(newItem);
+    const newItem = {
+      id: `custom-${Date.now()}-${idx}`,
+      productId: 'custom-ai',
+      name: `${stk.name} [MOCKUP DESIGN]`,
+      material: getMaterialName(stk.material),
+      dimension: stk.dimensionLabel,
+      unitPrice: unitPrice,
+      quantity: stk.quantity || 5,
+      img: stk.img,
+      isCustom: true
+    };
+
+    state.cart.unshift(newItem);
+  });
+
   updateCartBadges();
 
-  const toCart = confirm(`Stiker "${newItem.name}" (${qty} pcs) ditambahkan ke Keranjang. Buka halaman keranjang sekarang?`);
+  const toCart = confirm(`${state.studio.stickers.length} Desain Stiker berhasil dimasukkan ke Keranjang! Buka halaman keranjang sekarang?`);
   if (toCart) {
     navigateTo('cart');
   }
