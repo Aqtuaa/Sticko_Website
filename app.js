@@ -662,12 +662,20 @@ function getMaterialName(key) {
 function updateStudioControlsForSelected() {
   const sticker = getSelectedSticker();
   const badge = document.getElementById('active-sticker-badge');
-  if (!sticker) {
-    if (badge) badge.textContent = 'TIDAK ADA STIKER';
+  const isSelected = state.studio.selectedStickerId !== null;
+
+  if (!isSelected || !sticker) {
+    if (badge) {
+      badge.textContent = 'KLIK STIKER UNTUK EDIT';
+      badge.className = 'bg-punk-gray text-punk-black border border-punk-black px-1.5 py-0.5 text-[9px] font-bold uppercase';
+    }
     return;
   }
 
-  if (badge) badge.textContent = `STIKER: ${sticker.name.substring(0, 16).toUpperCase()}`;
+  if (badge) {
+    badge.textContent = `STIKER: ${sticker.name.substring(0, 16).toUpperCase()}`;
+    badge.className = 'bg-punk-black text-punk-yellow px-1.5 py-0.5 text-[9px] font-bold uppercase';
+  }
 
   // Update material cards
   document.querySelectorAll('.material-card').forEach(card => {
@@ -738,34 +746,34 @@ function renderCanvasStickers() {
     const isSelected = s.id === state.studio.selectedStickerId;
     return `
       <div id="sticker-item-${s.id}" 
-           class="sticker-canvas-item absolute cursor-grab ${isSelected ? 'is-selected z-40' : 'z-20'}" 
+           class="sticker-canvas-item absolute ${isSelected ? 'is-selected z-40' : 'z-20'}" 
            data-sticker-id="${s.id}"
            style="left: ${s.x}px; top: ${s.y}px; transform: scale(${s.scale}) rotate(${s.rotate}deg);">
         
         <div class="transform-bounding-box" id="transform-box-${s.id}">
           
           <!-- Bounding Blue Frame (Visible if selected) -->
-          <div class="transform-outline ${isSelected ? 'block' : 'hidden'}"></div>
+          <div class="transform-outline"></div>
 
           <!-- Rotate Handle at Top Center (Visible if selected) -->
-          <div class="rotate-stem ${isSelected ? 'block' : 'hidden'}"></div>
-          <div class="rotate-handle ${isSelected ? 'flex' : 'hidden'}" data-role="rotate" data-sticker-id="${s.id}" title="Tarik untuk memutar">
+          <div class="rotate-stem"></div>
+          <div class="rotate-handle" data-role="rotate" data-sticker-id="${s.id}" title="Tarik untuk memutar">
             <i class="fa-solid fa-rotate pointer-events-none"></i>
           </div>
 
           <!-- 4 Corner Scale Handles (Visible if selected) -->
-          <div class="scale-handle handle-tl ${isSelected ? 'block' : 'hidden'}" data-role="scale" data-corner="tl" data-sticker-id="${s.id}" title="Tarik untuk resize"></div>
-          <div class="scale-handle handle-tr ${isSelected ? 'block' : 'hidden'}" data-role="scale" data-corner="tr" data-sticker-id="${s.id}" title="Tarik untuk resize"></div>
-          <div class="scale-handle handle-bl ${isSelected ? 'block' : 'hidden'}" data-role="scale" data-corner="bl" data-sticker-id="${s.id}" title="Tarik untuk resize"></div>
-          <div class="scale-handle handle-br ${isSelected ? 'block' : 'hidden'}" data-role="scale" data-corner="br" data-sticker-id="${s.id}" title="Tarik untuk resize"></div>
+          <div class="scale-handle handle-tl" data-role="scale" data-corner="tl" data-sticker-id="${s.id}" title="Tarik untuk resize"></div>
+          <div class="scale-handle handle-tr" data-role="scale" data-corner="tr" data-sticker-id="${s.id}" title="Tarik untuk resize"></div>
+          <div class="scale-handle handle-bl" data-role="scale" data-corner="bl" data-sticker-id="${s.id}" title="Tarik untuk resize"></div>
+          <div class="scale-handle handle-br" data-role="scale" data-corner="br" data-sticker-id="${s.id}" title="Tarik untuk resize"></div>
 
           <!-- Live Size & Rotation HUD Tooltip -->
-          <div id="transform-hud-${s.id}" class="transform-hud-tip ${isSelected ? 'active' : ''}">${s.scale.toFixed(2)}x | ${s.rotate}°</div>
+          <div id="transform-hud-${s.id}" class="transform-hud-tip">${s.scale.toFixed(2)}x | ${s.rotate}°</div>
 
           <!-- Red Delete 'X' Button at Bottom Center of Frame -->
-          <div class="delete-stem ${isSelected ? 'block' : 'hidden'}"></div>
+          <div class="delete-stem"></div>
           <button type="button" 
-                  class="delete-handle ${isSelected ? 'flex' : 'hidden'}" 
+                  class="delete-handle" 
                   data-role="delete" 
                   data-sticker-id="${s.id}" 
                   onclick="deleteSticker('${s.id}', event)" 
@@ -780,7 +788,7 @@ function renderCanvasStickers() {
                  alt="${s.name}" 
                  draggable="false"
                  oncontextmenu="return false;"
-                 class="w-28 sm:w-32 h-auto object-contain select-none cursor-grab" 
+                 class="w-28 sm:w-32 h-auto object-contain select-none" 
                  style="filter: ${s.aiUpscaleActive ? 'contrast(1.1) saturate(1.1)' : 'none'}; pointer-events: auto;">
           </div>
 
@@ -907,7 +915,11 @@ function initFigmaStyleTransformEngine() {
 
     // 2. Find clicked sticker
     const stickerItem = e.target.closest('.sticker-canvas-item');
-    if (!stickerItem) return;
+    if (!stickerItem) {
+      // Clicked outside any sticker on the mockup stage -> deselect!
+      deselectAllStickers();
+      return;
+    }
 
     const stickerId = stickerItem.getAttribute('data-sticker-id');
     const stickerData = state.studio.stickers.find(s => s.id === stickerId);
@@ -920,22 +932,10 @@ function initFigmaStyleTransformEngine() {
       document.querySelectorAll('.sticker-canvas-item').forEach(el => {
         el.classList.remove('is-selected', 'z-40');
         el.classList.add('z-20');
-        el.querySelectorAll('.transform-outline, .rotate-handle, .rotate-stem, .scale-handle, .delete-handle, .delete-stem').forEach(c => {
-          c.classList.add('hidden');
-          c.classList.remove('flex', 'block');
-        });
       });
 
       stickerItem.classList.add('is-selected', 'z-40');
       stickerItem.classList.remove('z-20');
-      stickerItem.querySelectorAll('.transform-outline, .rotate-stem, .scale-handle, .delete-stem').forEach(c => {
-        c.classList.remove('hidden');
-        c.classList.add('block');
-      });
-      stickerItem.querySelectorAll('.rotate-handle, .delete-handle').forEach(c => {
-        c.classList.remove('hidden');
-        c.classList.add('flex');
-      });
 
       updateStudioControlsForSelected();
     }
@@ -1050,6 +1050,32 @@ function initFigmaStyleTransformEngine() {
     window.removeEventListener('pointermove', onPointerMove);
     window.removeEventListener('pointerup', onPointerUp);
   }
+
+  // Global click outside to deselect sticker frames when clicking other areas
+  document.addEventListener('pointerdown', (e) => {
+    if (state.currentPage !== 'studio') return;
+
+    // If clicking inside a sticker or its handles, don't deselect here
+    if (e.target.closest('.sticker-canvas-item')) return;
+    
+    // If clicking studio controls panel or studio buttons, keep selection
+    if (e.target.closest('#studio-controls-panel') || 
+        e.target.closest('.preset-btn') || 
+        e.target.closest('.material-card') || 
+        e.target.closest('.dimension-btn') || 
+        e.target.closest('#drop-zone') || 
+        e.target.closest('.color-var-btn') || 
+        e.target.closest('.device-tab') ||
+        e.target.closest('#active-sticker-badge') ||
+        e.target.closest('button[onclick*="addNewSticker"]') ||
+        e.target.closest('button[onclick*="addCustomToCart"]') ||
+        e.target.closest('button[onclick*="resetStudioCanvas"]')) {
+      return;
+    }
+
+    // Otherwise, user clicked other areas -> deselect!
+    deselectAllStickers();
+  });
 }
 
 // ==========================================
