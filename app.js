@@ -394,8 +394,20 @@ function addNewStickerPrompt() {
 function addNewSticker(img, name, material = 'holographic') {
   const newId = 'stk-' + Date.now();
   const count = state.studio.stickers.length;
-  const offsetX = 50 + ((count * 75) % 260);
-  const offsetY = 50 + ((count * 45) % 170);
+  
+  let offsetX = 50 + ((count * 75) % 260);
+  let offsetY = 50 + ((count * 45) % 170);
+
+  if (state.studio.activeDevice === 'tumbler') {
+    offsetX = 90 + ((count * 25) % 60);
+    offsetY = 110 + ((count * 50) % 150);
+  } else if (state.studio.activeDevice === 'phone') {
+    offsetX = 95 + ((count * 25) % 55);
+    offsetY = 100 + ((count * 45) % 140);
+  } else if (state.studio.activeDevice === 'tablet') {
+    offsetX = 120 + ((count * 60) % 200);
+    offsetY = 80 + ((count * 40) % 140);
+  }
 
   const newSticker = {
     id: newId,
@@ -403,7 +415,7 @@ function addNewSticker(img, name, material = 'holographic') {
     img: img || 'logo.png',
     x: offsetX,
     y: offsetY,
-    scale: 0.9,
+    scale: state.studio.activeDevice === 'phone' ? 0.75 : 0.9,
     rotate: (count % 2 === 0 ? -1 : 1) * (5 + (count * 4) % 25),
     material: material,
     dimensionKey: '7x7',
@@ -666,7 +678,7 @@ function updateStudioControlsForSelected() {
 
   if (!isSelected || !sticker) {
     if (badge) {
-      badge.textContent = 'KLIK STIKER UNTUK EDIT';
+      badge.textContent = state.studio.stickers.length === 0 ? 'PILIH PRESET / UPLOAD' : 'KLIK STIKER UNTUK EDIT';
       badge.className = 'bg-punk-gray text-punk-black border border-punk-black px-1.5 py-0.5 text-[9px] font-bold uppercase';
     }
     return;
@@ -728,14 +740,10 @@ function renderCanvasStickers() {
 
   if (state.studio.stickers.length === 0) {
     layer.innerHTML = `
-      <div class="absolute inset-0 flex flex-col items-center justify-center p-4 text-center pointer-events-none">
-        <div class="bg-punk-black/90 border-2 border-punk-yellow p-4 text-punk-white font-mono text-xs max-w-xs space-y-2">
-          <p class="font-bold text-punk-yellow">[CANVAS KOSONG]</p>
-          <p class="text-[11px] text-punk-white/80">Semua stiker telah dihapus. Klik preset di bawah atau upload gambar baru untuk menempel stiker!</p>
-          <button onclick="addNewStickerPrompt()" class="punk-btn px-3 py-1 text-[11px] font-bold pointer-events-auto mt-2">
-            + TAMBAH STIKER
-          </button>
-        </div>
+      <div class="absolute bottom-3 left-1/2 -translate-x-1/2 pointer-events-none z-20 whitespace-nowrap">
+        <span class="bg-punk-black/85 text-punk-white border border-punk-white/20 px-3 py-1 text-[10px] font-mono uppercase">
+          MOCKUP BERSIH &bull; KLIK PRESET ATAU UPLOAD UNTUK TEMPEL STIKER
+        </span>
       </div>
     `;
     updateStudioControlsForSelected();
@@ -804,7 +812,14 @@ function renderCanvasStickers() {
 // MOCKUP DEVICES & COLOR VARIANTS
 // ==========================================
 function switchMockupDevice(deviceKey, element) {
+  const isChangingDevice = state.studio.activeDevice !== deviceKey;
   state.studio.activeDevice = deviceKey;
+
+  // Hapus semua stiker saat ganti model mockup agar stiker tidak tertempel terus
+  if (isChangingDevice) {
+    state.studio.stickers = [];
+    state.studio.selectedStickerId = null;
+  }
 
   document.querySelectorAll('.device-tab').forEach(tab => {
     tab.classList.remove('active', 'punk-btn');
