@@ -176,6 +176,41 @@ const PRODUCTS_DATA = [
   }
 ];
 
+// ==========================================
+// OFFICIAL SOCIAL MEDIA CONFIGURATION
+// ==========================================
+const SOCIAL_LINKS = {
+  instagram: {
+    platform: 'Instagram',
+    handle: '@heystiko',
+    url: 'https://www.instagram.com/heystiko',
+    icon: 'fa-brands fa-instagram'
+  },
+  tiktok: {
+    platform: 'TikTok',
+    handle: '@heystiko',
+    url: 'https://www.tiktok.com/@heystiko?_r=1&_t=ZS-9BbscCw6fCA',
+    icon: 'fa-brands fa-tiktok'
+  },
+  youtube: {
+    platform: 'YouTube',
+    handle: 'Stiko Binus',
+    url: 'https://www.youtube.com/@StikoBinus',
+    icon: 'fa-brands fa-youtube'
+  }
+};
+
+/**
+ * Open official social media link safely in new tab
+ * @param {'instagram'|'tiktok'|'youtube'} platform 
+ */
+function openSocialLink(platform) {
+  const target = SOCIAL_LINKS[platform];
+  if (target && target.url) {
+    window.open(target.url, '_blank', 'noopener,noreferrer');
+  }
+}
+
 // App Global State
 const state = {
   currentPage: 'home',
