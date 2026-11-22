@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <filter id="sticker-diecut-arcade" x="-20%" y="-20%" width="140%" height="140%">
+      <feMorphology in="SourceAlpha" result="DILATED" operator="dilate" radius="8"/>
+      <feFlood flood-color="#FFFFFF" result="WHITE"/>
+      <feComposite in="WHITE" in2="DILATED" operator="in" result="OUTLINE"/>
+      <feMerge>
+        <feMergeNode in="OUTLINE"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <g filter="url(#sticker-diecut-arcade)">
+    <!-- 8-Bit Pixel Invader Shape -->
+    <rect x="50" y="40" width="200" height="200" fill="#000000" stroke="#0000FF" stroke-width="8"/>
+    <!-- Pixel Blocks -->
+    <!-- Row 1 -->
+    <rect x="80" y="60" width="20" height="20" fill="#FF003C"/>
+    <rect x="200" y="60" width="20" height="20" fill="#FF003C"/>
+    <!-- Row 2 -->
+    <rect x="100" y="80" width="20" height="20" fill="#FF003C"/>
+    <rect x="180" y="80" width="20" height="20" fill="#FF003C"/>
+    <!-- Row 3: Body -->
+    <rect x="80" y="100" width="140" height="60" fill="#FFCC00"/>
+    <!-- Eyes -->
+    <rect x="100" y="120" width="20" height="20" fill="#000000"/>
+    <rect x="180" y="120" width="20" height="20" fill="#000000"/>
+    <!-- Teeth / Legs -->
+    <rect x="80" y="160" width="40" height="30" fill="#FF003C"/>
+    <rect x="140" y="160" width="20" height="20" fill="#FF003C"/>
+    <rect x="180" y="160" width="40" height="30" fill="#FF003C"/>
+    <rect x="60" y="190" width="30" height="20" fill="#FFFFFF"/>
+    <rect x="210" y="190" width="30" height="20" fill="#FFFFFF"/>
+    <!-- Caption -->
+    <text x="150" y="270" font-family="'Space Mono', monospace" font-size="14" font-weight="700" fill="#000000" text-anchor="middle">8-BIT RIOT ARCADE</text>
+  </g>
+</svg>

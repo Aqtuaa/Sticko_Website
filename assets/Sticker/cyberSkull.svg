@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <filter id="sticker-diecut" x="-20%" y="-20%" width="140%" height="140%">
+      <feMorphology in="SourceAlpha" result="DILATED" operator="dilate" radius="8"/>
+      <feFlood flood-color="#FFFFFF" result="WHITE"/>
+      <feComposite in="WHITE" in2="DILATED" operator="in" result="OUTLINE"/>
+      <feMerge>
+        <feMergeNode in="OUTLINE"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <g filter="url(#sticker-diecut)">
+    <!-- Cyber Skull Artwork -->
+    <path d="M150 40 C95 40 55 85 55 145 C55 185 75 210 100 230 L100 260 L200 260 L200 230 C225 210 245 185 245 145 C245 85 205 40 150 40 Z" fill="#000000" stroke="#0000FF" stroke-width="8"/>
+    <!-- Cyber Eye Sockets -->
+    <polygon points="90,130 130,115 125,160 85,165" fill="#0000FF"/>
+    <polygon points="210,130 170,115 175,160 215,165" fill="#FF003C"/>
+    <!-- Crossbones & Teeth Grid -->
+    <path d="M135 185 L150 170 L165 185 L150 200 Z" fill="#FFFFFF"/>
+    <rect x="110" y="220" width="16" height="30" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+    <rect x="132" y="220" width="16" height="30" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+    <rect x="154" y="220" width="16" height="30" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+    <rect x="176" y="220" width="16" height="30" fill="#FFFFFF" stroke="#000000" stroke-width="2"/>
+    <!-- Cyberpunk Circuit Tags -->
+    <polyline points="70,100 100,100 120,75" fill="none" stroke="#FFCC00" stroke-width="5"/>
+    <circle cx="120" cy="75" r="5" fill="#FFCC00"/>
+    <text x="150" y="35" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="16" fill="#000000" text-anchor="middle">CYBER SKULL // 01</text>
+  </g>
+</svg>
