@@ -385,45 +385,41 @@ textarea:focus-visible,
   -webkit-user-drag: none !important;
 }
 
-/* Sticker Die-Cut Contour (Distinct 2px / 5px / 9px Outlines) */
+/* Sticker Die-Cut Contour (Refined Slim Outlines: 1px Tipis / 2px Sedang / 3.8px Tebal) */
 .diecut-contour img,
 .diecut-contour.diecut-medium img {
-  filter: 
-    drop-shadow(5px 0 0 #FFFFFF) 
-    drop-shadow(-5px 0 0 #FFFFFF) 
-    drop-shadow(0 5px 0 #FFFFFF) 
-    drop-shadow(0 -5px 0 #FFFFFF)
-    drop-shadow(3.5px 3.5px 0 #FFFFFF)
-    drop-shadow(-3.5px 3.5px 0 #FFFFFF)
-    drop-shadow(3.5px -3.5px 0 #FFFFFF)
-    drop-shadow(-3.5px -3.5px 0 #FFFFFF)
-    drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.45));
-}
-
-.diecut-contour.diecut-thin img {
   filter: 
     drop-shadow(2px 0 0 #FFFFFF) 
     drop-shadow(-2px 0 0 #FFFFFF) 
     drop-shadow(0 2px 0 #FFFFFF) 
     drop-shadow(0 -2px 0 #FFFFFF)
-    drop-shadow(1.5px 1.5px 0 #FFFFFF)
-    drop-shadow(-1.5px 1.5px 0 #FFFFFF)
-    drop-shadow(1.5px -1.5px 0 #FFFFFF)
-    drop-shadow(-1.5px -1.5px 0 #FFFFFF)
-    drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.35));
+    drop-shadow(1.4px 1.4px 0 #FFFFFF)
+    drop-shadow(-1.4px 1.4px 0 #FFFFFF)
+    drop-shadow(1.4px -1.4px 0 #FFFFFF)
+    drop-shadow(-1.4px -1.4px 0 #FFFFFF)
+    drop-shadow(1.5px 1.5px 1px rgba(0, 0, 0, 0.35));
+}
+
+.diecut-contour.diecut-thin img {
+  filter: 
+    drop-shadow(1px 0 0 #FFFFFF) 
+    drop-shadow(-1px 0 0 #FFFFFF) 
+    drop-shadow(0 1px 0 #FFFFFF) 
+    drop-shadow(0 -1px 0 #FFFFFF)
+    drop-shadow(1px 1px 0px rgba(0, 0, 0, 0.25));
 }
 
 .diecut-contour.diecut-thick img {
   filter: 
-    drop-shadow(9px 0 0 #FFFFFF) 
-    drop-shadow(-9px 0 0 #FFFFFF) 
-    drop-shadow(0 9px 0 #FFFFFF) 
-    drop-shadow(0 -9px 0 #FFFFFF)
-    drop-shadow(6.5px 6.5px 0 #FFFFFF)
-    drop-shadow(-6.5px 6.5px 0 #FFFFFF)
-    drop-shadow(6.5px -6.5px 0 #FFFFFF)
-    drop-shadow(-6.5px -6.5px 0 #FFFFFF)
-    drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5));
+    drop-shadow(3.8px 0 0 #FFFFFF) 
+    drop-shadow(-3.8px 0 0 #FFFFFF) 
+    drop-shadow(0 3.8px 0 #FFFFFF) 
+    drop-shadow(0 -3.8px 0 #FFFFFF)
+    drop-shadow(2.7px 2.7px 0 #FFFFFF)
+    drop-shadow(-2.7px 2.7px 0 #FFFFFF)
+    drop-shadow(2.7px -2.7px 0 #FFFFFF)
+    drop-shadow(-2.7px -2.7px 0 #FFFFFF)
+    drop-shadow(2.5px 2.5px 1px rgba(0, 0, 0, 0.4));
 }
 
 /* AI Image Auto-Enhance (Contrast, Saturation & Clarity Boost) */
@@ -435,15 +431,11 @@ textarea:focus-visible,
 .diecut-contour.diecut-thin.ai-enhanced img {
   filter: 
     contrast(1.22) saturate(1.28) brightness(1.03)
-    drop-shadow(2px 0 0 #FFFFFF) 
-    drop-shadow(-2px 0 0 #FFFFFF) 
-    drop-shadow(0 2px 0 #FFFFFF) 
-    drop-shadow(0 -2px 0 #FFFFFF)
-    drop-shadow(1.5px 1.5px 0 #FFFFFF)
-    drop-shadow(-1.5px 1.5px 0 #FFFFFF)
-    drop-shadow(1.5px -1.5px 0 #FFFFFF)
-    drop-shadow(-1.5px -1.5px 0 #FFFFFF)
-    drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.35));
+    drop-shadow(1px 0 0 #FFFFFF) 
+    drop-shadow(-1px 0 0 #FFFFFF) 
+    drop-shadow(0 1px 0 #FFFFFF) 
+    drop-shadow(0 -1px 0 #FFFFFF)
+    drop-shadow(1px 1px 0px rgba(0, 0, 0, 0.25));
 }
 
 /* AI Enhanced + Medium Outline */
@@ -451,30 +443,30 @@ textarea:focus-visible,
 .diecut-contour.diecut-medium.ai-enhanced img {
   filter: 
     contrast(1.22) saturate(1.28) brightness(1.03)
-    drop-shadow(5px 0 0 #FFFFFF) 
-    drop-shadow(-5px 0 0 #FFFFFF) 
-    drop-shadow(0 5px 0 #FFFFFF) 
-    drop-shadow(0 -5px 0 #FFFFFF)
-    drop-shadow(3.5px 3.5px 0 #FFFFFF)
-    drop-shadow(-3.5px 3.5px 0 #FFFFFF)
-    drop-shadow(3.5px -3.5px 0 #FFFFFF)
-    drop-shadow(-3.5px -3.5px 0 #FFFFFF)
-    drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.45));
+    drop-shadow(2px 0 0 #FFFFFF) 
+    drop-shadow(-2px 0 0 #FFFFFF) 
+    drop-shadow(0 2px 0 #FFFFFF) 
+    drop-shadow(0 -2px 0 #FFFFFF)
+    drop-shadow(1.4px 1.4px 0 #FFFFFF)
+    drop-shadow(-1.4px 1.4px 0 #FFFFFF)
+    drop-shadow(1.4px -1.4px 0 #FFFFFF)
+    drop-shadow(-1.4px -1.4px 0 #FFFFFF)
+    drop-shadow(1.5px 1.5px 1px rgba(0, 0, 0, 0.35));
 }
 
 /* AI Enhanced + Thick Outline */
 .diecut-contour.diecut-thick.ai-enhanced img {
   filter: 
     contrast(1.22) saturate(1.28) brightness(1.03)
-    drop-shadow(9px 0 0 #FFFFFF) 
-    drop-shadow(-9px 0 0 #FFFFFF) 
-    drop-shadow(0 9px 0 #FFFFFF) 
-    drop-shadow(0 -9px 0 #FFFFFF)
-    drop-shadow(6.5px 6.5px 0 #FFFFFF)
-    drop-shadow(-6.5px 6.5px 0 #FFFFFF)
-    drop-shadow(6.5px -6.5px 0 #FFFFFF)
-    drop-shadow(-6.5px -6.5px 0 #FFFFFF)
-    drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5));
+    drop-shadow(3.8px 0 0 #FFFFFF) 
+    drop-shadow(-3.8px 0 0 #FFFFFF) 
+    drop-shadow(0 3.8px 0 #FFFFFF) 
+    drop-shadow(0 -3.8px 0 #FFFFFF)
+    drop-shadow(2.7px 2.7px 0 #FFFFFF)
+    drop-shadow(-2.7px 2.7px 0 #FFFFFF)
+    drop-shadow(2.7px -2.7px 0 #FFFFFF)
+    drop-shadow(-2.7px -2.7px 0 #FFFFFF)
+    drop-shadow(2.5px 2.5px 1px rgba(0, 0, 0, 0.4));
 }
 
 /* Holographic Shimmer */

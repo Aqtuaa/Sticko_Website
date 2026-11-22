@@ -179,7 +179,7 @@ const state = {
         quantity: 5,
         aiCropActive: true,
         aiEnhanceActive: false,
-        outlineWidth: 5
+        outlineWidth: 2
       }
     ],
     selectedStickerId: null,
@@ -316,7 +316,7 @@ function addNewSticker(img, name, material = 'holographic') {
     quantity: 5,
     aiCropActive: true,
     aiEnhanceActive: false,
-    outlineWidth: 5
+    outlineWidth: 2
   };
 
   state.studio.stickers.push(newSticker);
@@ -446,7 +446,7 @@ function setOutlineWidth(widthPx, element) {
   }
 
   renderCanvasStickers();
-  const label = widthPx <= 2 ? 'Tipis (2px)' : (widthPx >= 8 ? 'Tebal (9px)' : 'Sedang (5px)');
+  const label = widthPx <= 1 ? 'Tipis (1px)' : (widthPx >= 3 ? 'Tebal (3.8px)' : 'Sedang (2px)');
   showInlineNotice(`Tebal garis potong die-cut diset ke: ${label}`, 'info');
 }
 
@@ -636,7 +636,7 @@ function updateStudioControlsForSelected() {
   if (enhanceInfo) enhanceInfo.classList.toggle('hidden', !sticker.aiEnhanceActive);
 
   // Sync active outline width button
-  const currentWidth = sticker.outlineWidth || 5;
+  const currentWidth = sticker.outlineWidth || 2;
   document.querySelectorAll('.outline-btn').forEach(btn => {
     btn.classList.remove('active', 'punk-btn');
     btn.classList.add('punk-btn-secondary');
@@ -717,7 +717,7 @@ function renderCanvasStickers() {
           </button>
 
           <!-- Transparent Die-Cut Contour Graphic & AI Auto-Enhance -->
-          <div class="relative ${s.aiCropActive ? (s.outlineWidth <= 2 ? 'diecut-contour diecut-thin' : (s.outlineWidth >= 8 ? 'diecut-contour diecut-thick' : 'diecut-contour diecut-medium')) : ''} ${s.aiEnhanceActive ? 'ai-enhanced' : ''} ${s.material === 'holographic' ? 'holo-foil' : ''}">
+          <div class="relative ${s.aiCropActive ? (s.outlineWidth <= 1 ? 'diecut-contour diecut-thin' : (s.outlineWidth >= 3 ? 'diecut-contour diecut-thick' : 'diecut-contour diecut-medium')) : ''} ${s.aiEnhanceActive ? 'ai-enhanced' : ''} ${s.material === 'holographic' ? 'holo-foil' : ''}">
             <img src="${s.img}" 
                  alt="${s.name}" 
                  draggable="false"
