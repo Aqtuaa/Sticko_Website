@@ -171,14 +171,15 @@ const state = {
         x: 150,
         y: 90,
         scale: 0.9,
-        rotate: -5,
+        rotate: 0,
         material: 'holographic',
         dimensionKey: '7x7',
         dimensionLabel: '7 × 7 cm',
         unitPrice: 9000,
         quantity: 5,
         aiCropActive: true,
-        outlineWidth: 6
+        aiEnhanceActive: false,
+        outlineWidth: 5
       }
     ],
     selectedStickerId: null,
@@ -307,14 +308,15 @@ function addNewSticker(img, name, material = 'holographic') {
     x: offsetX,
     y: offsetY,
     scale: state.studio.activeDevice === 'phone' ? 0.75 : 0.9,
-    rotate: (count % 2 === 0 ? -1 : 1) * (4 + (count * 4) % 20),
+    rotate: 0,
     material: material,
     dimensionKey: '7x7',
     dimensionLabel: '7 × 7 cm',
     unitPrice: 9000,
     quantity: 5,
     aiCropActive: true,
-    outlineWidth: 6
+    aiEnhanceActive: false,
+    outlineWidth: 5
   };
 
   state.studio.stickers.push(newSticker);
@@ -444,6 +446,27 @@ function setOutlineWidth(widthPx, element) {
   }
 
   renderCanvasStickers();
+  const label = widthPx <= 2 ? 'Tipis (2px)' : (widthPx >= 8 ? 'Tebal (9px)' : 'Sedang (5px)');
+  showInlineNotice(`Tebal garis potong die-cut diset ke: ${label}`, 'info');
+}
+
+// AI Image Auto-Enhance Feature (Contrast, Saturation & Print Clarity)
+function toggleAiEnhance(isActive) {
+  const sticker = getSelectedSticker();
+  if (sticker) {
+    sticker.aiEnhanceActive = isActive;
+  }
+  const infoEl = document.getElementById('ai-enhance-info');
+  if (infoEl) {
+    infoEl.classList.toggle('hidden', !isActive);
+  }
+  renderCanvasStickers();
+  showInlineNotice(
+    isActive 
+      ? 'AI Auto-Enhance aktif: Kontras +22% & Saturasi +28% dioptimalkan untuk hasil cetak tajam.' 
+      : 'AI Auto-Enhance dinonaktifkan.', 
+    isActive ? 'success' : 'info'
+  );
 }
 
 // Material Selection
@@ -598,6 +621,32 @@ function updateStudioControlsForSelected() {
   const qtyInput = document.getElementById('studio-qty-input');
   if (qtyInput) qtyInput.value = sticker.quantity || 5;
 
+  // Die-Cut & Contour preview toggle
+  const cropToggle = document.getElementById('ai-crop-toggle');
+  if (cropToggle) cropToggle.checked = sticker.aiCropActive !== false;
+
+  const outlineControls = document.getElementById('outline-controls');
+  if (outlineControls) outlineControls.style.display = (sticker.aiCropActive !== false) ? 'flex' : 'none';
+
+  // AI Image Auto-Enhance toggle
+  const enhanceToggle = document.getElementById('ai-enhance-toggle');
+  if (enhanceToggle) enhanceToggle.checked = !!sticker.aiEnhanceActive;
+
+  const enhanceInfo = document.getElementById('ai-enhance-info');
+  if (enhanceInfo) enhanceInfo.classList.toggle('hidden', !sticker.aiEnhanceActive);
+
+  // Sync active outline width button
+  const currentWidth = sticker.outlineWidth || 5;
+  document.querySelectorAll('.outline-btn').forEach(btn => {
+    btn.classList.remove('active', 'punk-btn');
+    btn.classList.add('punk-btn-secondary');
+  });
+  const activeOutlineBtn = document.querySelector(`.outline-btn[onclick*="(${currentWidth},"]`);
+  if (activeOutlineBtn) {
+    activeOutlineBtn.classList.add('active', 'punk-btn');
+    activeOutlineBtn.classList.remove('punk-btn-secondary');
+  }
+
   calculateStudioPrice();
 }
 
@@ -652,7 +701,7 @@ function renderCanvasStickers() {
           <div class="scale-handle handle-br" data-role="scale" data-corner="br" data-sticker-id="${s.id}" title="Tarik atau tekan +/- untuk perbesar"></div>
 
           <!-- Live Size & Rotation HUD Tooltip -->
-          <div id="transform-hud-${s.id}" class="transform-hud-tip">${s.scale.toFixed(2)}x | ${s.rotate}°</div>
+          <div id="transform-hud-${s.id}" class="transform-hud-tip">${s.scale.toFixed(2)}x | ${s.rotate}°${s.aiEnhanceActive ? ' | AI' : ''}</div>
 
           <!-- Red Delete 'X' Button at Bottom of Frame -->
           <div class="delete-stem"></div>
@@ -667,8 +716,8 @@ function renderCanvasStickers() {
             <i class="fa-solid fa-xmark pointer-events-none text-xs" aria-hidden="true"></i>
           </button>
 
-          <!-- Transparent Die-Cut Contour Graphic -->
-          <div class="relative ${s.aiCropActive ? 'diecut-contour' : ''} ${s.outlineWidth >= 10 ? 'diecut-thick' : (s.outlineWidth <= 3 ? 'diecut-thin' : '')} ${s.material === 'holographic' ? 'holo-foil' : ''}">
+          <!-- Transparent Die-Cut Contour Graphic & AI Auto-Enhance -->
+          <div class="relative ${s.aiCropActive ? (s.outlineWidth <= 2 ? 'diecut-contour diecut-thin' : (s.outlineWidth >= 8 ? 'diecut-contour diecut-thick' : 'diecut-contour diecut-medium')) : ''} ${s.aiEnhanceActive ? 'ai-enhanced' : ''} ${s.material === 'holographic' ? 'holo-foil' : ''}">
             <img src="${s.img}" 
                  alt="${s.name}" 
                  draggable="false"
@@ -769,10 +818,10 @@ function resetStudioCanvas() {
     s.x = 50 + (idx * 80) % 240;
     s.y = 50 + (idx * 50) % 160;
     s.scale = 0.9;
-    s.rotate = (idx % 2 === 0 ? -1 : 1) * (4 + (idx * 4) % 18);
+    s.rotate = 0;
   });
   renderCanvasStickers();
-  showInlineNotice('Posisi stiker di-reset ke tengah mockup', 'info');
+  showInlineNotice('Posisi dan rotasi stiker di-reset ke 0° di tengah mockup', 'info');
 }
 
 // ==========================================

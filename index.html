@@ -200,15 +200,16 @@
               </div>
             </div>
 
-            <!-- Step 2: Die-Cut Contour Preview (Honest Mode) -->
+            <!-- Step 2: Die-Cut Contour & AI Image Enhance -->
             <div class="border-2 border-punk-black bg-punk-white p-4 space-y-3">
               <div class="flex justify-between items-center border-b-2 border-punk-black pb-2">
-                <span class="font-display text-xs uppercase text-punk-black font-bold">2. PRATINJAU KONTUR DIE-CUT</span>
+                <span class="font-display text-xs uppercase text-punk-black font-bold">2. PRATINJAU KONTUR & AI ENHANCE</span>
                 <span class="bg-punk-gray text-punk-black text-xs font-bold px-2 py-0.5 uppercase border border-punk-black">
                   MODE DEMO
                 </span>
               </div>
 
+              <!-- Die-Cut Contour Box -->
               <div class="border-2 border-punk-black bg-punk-gray p-3 space-y-2">
                 <div class="flex items-center justify-between">
                   <div>
@@ -219,12 +220,30 @@
                 </div>
 
                 <div id="outline-controls" class="pt-2 border-t border-punk-black/20 flex items-center justify-between text-xs">
-                  <span class="text-punk-black/80">Tebal Outline:</span>
+                  <span class="text-punk-black/80 font-bold">Tebal Outline:</span>
                   <div class="flex gap-1">
-                    <button type="button" onclick="setOutlineWidth(3, this)" class="outline-btn punk-btn-secondary px-2.5 py-1 text-xs font-bold uppercase">Tipis</button>
-                    <button type="button" onclick="setOutlineWidth(6, this)" class="outline-btn active punk-btn px-2.5 py-1 text-xs font-bold uppercase">Sedang</button>
-                    <button type="button" onclick="setOutlineWidth(10, this)" class="outline-btn punk-btn-secondary px-2.5 py-1 text-xs font-bold uppercase">Tebal</button>
+                    <button type="button" onclick="setOutlineWidth(2, this)" class="outline-btn punk-btn-secondary px-2.5 py-1 text-xs font-bold uppercase" title="2px outline tipis">Tipis</button>
+                    <button type="button" onclick="setOutlineWidth(5, this)" class="outline-btn active punk-btn px-2.5 py-1 text-xs font-bold uppercase" title="5px outline sedang">Sedang</button>
+                    <button type="button" onclick="setOutlineWidth(9, this)" class="outline-btn punk-btn-secondary px-2.5 py-1 text-xs font-bold uppercase" title="9px outline tebal">Tebal</button>
                   </div>
+                </div>
+              </div>
+
+              <!-- AI Image Auto-Enhance Box -->
+              <div class="border-2 border-punk-black bg-punk-gray p-3 space-y-2">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-bold uppercase text-punk-black block text-xs">AI AUTO-ENHANCE</span>
+                      <span class="bg-punk-black text-punk-yellow px-1.5 py-0.5 text-[10px] font-mono font-bold uppercase border border-punk-black">AI</span>
+                    </div>
+                    <span class="text-xs text-punk-black/70 block">Tingkatkan kontras, saturasi warna, dan kejernihan cetak stiker</span>
+                  </div>
+                  <input type="checkbox" id="ai-enhance-toggle" onchange="toggleAiEnhance(this.checked)" class="punk-toggle" aria-label="Toggle AI Image Auto-Enhance">
+                </div>
+                <div id="ai-enhance-info" class="text-xs text-punk-black/80 font-mono hidden pt-1.5 border-t border-punk-black/20 flex items-center gap-1.5">
+                  <i class="fa-solid fa-wand-magic-sparkles text-punk-blue" aria-hidden="true"></i>
+                  <span>AI Enhance aktif: Saturasi warna +28% & Kontras cetak +22%</span>
                 </div>
               </div>
             </div>
